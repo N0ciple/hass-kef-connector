@@ -1,0 +1,20 @@
+{
+  "domain": "kefls50w2",
+  "name": "Kef for LS50 W2",
+  "config_flow": false,
+  "version":"0.5.1",
+  "documentation": "https://github.com/N0ciple/hass-kef-connector",
+  "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
+  "requirements": [
+    "pykefcontrol==0.5",
+    "requests==2.26.0"
+  ],
+  "ssdp": [],
+  "zeroconf": ["_kef-info._tcp.local."],
+  "homekit": {},
+  "dependencies": [],
+  "codeowners": [
+    "@n0ciple"
+  ],
+  "iot_class": "local_polling"
+}
