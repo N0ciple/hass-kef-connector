@@ -52,7 +52,7 @@ DEFAULT_VOLUME_STEP = 0.03
 SCAN_INTERVAL = timedelta(seconds=10)
 
 
-DOMAIN = "kefls50w2"
+DOMAIN = "kef_connector"
 
 SOURCES = ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"]
 
@@ -98,7 +98,7 @@ def delay_update(delay):
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Setup platform kefls50w2"""
+    """Setup platform kef_connector"""
 
     # Get variables from configuration
     host = config[CONF_HOST]
