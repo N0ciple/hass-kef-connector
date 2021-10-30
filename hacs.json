@@ -1,0 +1,7 @@
+{
+    "name": "Kef Connector",
+    "zip_release": true,
+    "render_readme": true,
+    "domains": ["media_player"]
+
+}
