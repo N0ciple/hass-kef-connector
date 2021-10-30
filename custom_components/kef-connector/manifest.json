@@ -2,7 +2,7 @@
   "domain": "kef_connector",
   "name": "Kef for LS50 W2",
   "config_flow": false,
-  "version":"0.5.1",
+  "version":"0.5",
   "documentation": "https://github.com/N0ciple/hass-kef-connector",
   "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
   "requirements": [
