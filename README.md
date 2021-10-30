@@ -23,6 +23,7 @@ media_player:
     host: <IP-of-your-speakers>
 ```
 ⚠️ _Replace_ `<IP-of-your-speakers>` _with the correct IP._ 
+
 More information on how to find the IP of your Kef speakers [here](https://github.com/N0ciple/pykefcontrol#-get-the-ip-address).
 
 #### 📜 Platform configuration options
