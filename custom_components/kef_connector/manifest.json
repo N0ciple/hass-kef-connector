@@ -8,10 +8,6 @@
   "requirements": [
     "pykefcontrol==0.5"
   ],
-  "ssdp": [],
-  "zeroconf": ["_kef-info._tcp.local."],
-  "homekit": {},
-  "dependencies": [],
   "codeowners": [
     "@n0ciple"
   ],
