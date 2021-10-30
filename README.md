@@ -27,7 +27,9 @@ media_player:
 More information on how to find the IP of your Kef speakers [here](https://github.com/N0ciple/pykefcontrol#-get-the-ip-address).
 
 #### 📜 Platform configuration options
+
 Here is the list of the variables you can set if your `configuration.yaml` file.
+
 | option           | required     | default value | comment                                                                                                                                                                                                                                                                                                                |
 | ---------------- | ------------ | ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `host`           | **Required** | `None`        | This should be a string in the form `www.xxx.yyy.zzz`, being the IP address of your speakers.                                                                                                                                                                                                                          |
