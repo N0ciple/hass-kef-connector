@@ -2,7 +2,7 @@
   "domain": "kef_connector",
   "name": "Kef Connector",
   "config_flow": false,
-  "version":"0.5",
+  "version":"0.5.1",
   "documentation": "https://github.com/N0ciple/hass-kef-connector",
   "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
   "requirements": [
