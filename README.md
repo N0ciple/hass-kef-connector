@@ -11,7 +11,16 @@ A Home Assistant integration for the Kef LS50W2 🔊
 ## Installation and configuration
 
 ### ⬇️ Installation
-This custom component is currently being integrated into [HACS](https://hacs.xyz). However, if you want to use it asap, copy the [kef-connector](custom_components/kef-connector) folder in your home assistant `config/custom_components` folder.
+This custom component is currently being integrated into [HACS](https://hacs.xyz). 
+However, if you want to use it asap, you can either install it manually or add it as a custom repository in HACS.
+
+**Custom HACS repository**
+Go to your Home Assistant instance, then the HACS tab and then clic on `Integrations`. Clic on the 3 dots on the top right corner. Select `Custom repositories`. Add the following url : `https://github.com/N0ciple/hass-kef-connector`, and select  `Integration` for the category. Finally clic add.\
+Once this is done, clic `explore & add repositories` on the bottom right corner. Search for "Kef Connector", clic on it and then clic on `Install this repository in HACS`. Now, follow the instructions in the [configuration](#-configuration) section.
+
+
+**Manual Installation**
+Copy the [kef_connector](custom_components/kef_connector) folder in your home assistant `config/custom_components` folder, and then follow the [configuration](#-configuration) section.
 
 ### 🔧 Configuration
 
