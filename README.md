@@ -11,8 +11,8 @@ A Home Assistant integration for the Kef LS50W2 🔊
 ## Installation and configuration
 
 ### ⬇️ Installation
-This custom component is available on [HACS](https://hacs.xyz) !
-However, you can also install it manually, but HACS is the recommended method (see bellow for "manual installation").
+This custom component is available on [HACS](https://hacs.xyz) !\
+You can also install it manually, but HACS is the recommended method (see bellow for "manual installation").
 
 **Installation with HACS**\
 1. Go to your Home Assistant instance > HACS tab > `Integrations`.\
