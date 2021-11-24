@@ -144,6 +144,8 @@ class KefLS50W2(MediaPlayerEntity):
         self._max_volume = max_volume
         self._volume_step = volume_step * 100
         self._sources = sources
+        # Default previous source to wifi at component creation
+        self._previous_source = "wifi"
 
         # Variables to update in async_update
         self._volume = None
@@ -290,6 +292,10 @@ class KefLS50W2(MediaPlayerEntity):
 
         # Get speaker source
         self._source = await self._speaker.source
+        # Store current source as previous source
+        # if source is a real physical source
+        if self._source in self._sources:
+            self._previous_source = self._source
 
         # Update media state if a media is playing
         if self._state == STATE_PLAYING:
@@ -307,7 +313,7 @@ class KefLS50W2(MediaPlayerEntity):
 
     @delay_update(5)
     async def async_turn_on(self):
-        await self._speaker.power_on()
+        await self._speaker.set_source(self._previous_source)
 
     @delay_update(5)
     async def async_turn_off(self):
