@@ -37,7 +37,7 @@ _LOGGER = logging.getLogger(__name__)
 
 CONF_MAX_VOLUME = "maximum_volume"
 CONF_VOLUME_STEP = "volume_step"
-CONF_SPEAKER_MODEL = "kef_speaker_model"
+CONF_SPEAKER_MODEL = "speaker_model"
 
 DEFAULT_NAME = "DEFAULT_KEFSPEAKER"
 DEFAULT_MAX_VOLUME = 1
@@ -155,12 +155,12 @@ async def async_setup_platform(
 
     if speaker_model not in SOURCES:
         sources = SOURCES["default"]
-    else:
-        sources = SOURCES[speaker_model]
         _LOGGER.warning(
             "Kef Speaker model %s is unknown. Using default sources. Please make sure the model is either LSX2, LSX2LT, LS50W2 or LS60",
             speaker_model,
         )
+    else:
+        sources = SOURCES[speaker_model]
 
     _LOGGER.debug(
         "Setting up %s with host: %s, name: %s, sources: %s",
