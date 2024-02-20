@@ -1,6 +1,4 @@
 {
     "name": "Kef Connector",
-    "render_readme": true,
-    "domains": ["media_player"]
-
+    "render_readme": true
 }
