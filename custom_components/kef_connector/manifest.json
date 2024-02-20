@@ -1,15 +1,15 @@
 {
   "domain": "kef_connector",
   "name": "Kef Connector",
+  "codeowners": [
+    "@n0ciple"
+  ],
   "config_flow": false,
-  "version":"0.5.5",
   "documentation": "https://github.com/N0ciple/hass-kef-connector",
+  "iot_class": "local_polling",
   "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
   "requirements": [
     "pykefcontrol==0.5.1"
   ],
-  "codeowners": [
-    "@n0ciple"
-  ],
-  "iot_class": "local_polling"
+  "version":"0.5.5"
 }
