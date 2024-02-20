@@ -10,7 +10,7 @@
   "iot_class": "local_polling",
   "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
   "requirements": [
-    "pykefcontrol==0.7.1 "
+    "pykefcontrol==0.7.1"
   ],
   "version":"0.6.0"
 }
