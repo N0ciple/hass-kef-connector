@@ -1,1 +1,1 @@
-"""The Kef for LS50 W2 integration."""
+"""The integration for KEF speakers."""
