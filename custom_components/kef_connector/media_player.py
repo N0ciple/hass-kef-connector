@@ -1,44 +1,34 @@
 from __future__ import annotations
+
 import asyncio
-import logging
 from datetime import timedelta
 import functools
+import logging
 
 from pykefcontrol.kef_connector import KefAsyncConnector
 import voluptuous as vol
 
-import homeassistant.util.dt as hass_dt
-import homeassistant.helpers.config_validation as cv
-import homeassistant.helpers.aiohttp_client as hass_aiohttp
 from homeassistant.components.media_player import (
     PLATFORM_SCHEMA,
-    SUPPORT_VOLUME_MUTE,
-    SUPPORT_VOLUME_SET,
-    SUPPORT_VOLUME_STEP,
-    SUPPORT_TURN_OFF,
-    SUPPORT_TURN_ON,
-    SUPPORT_PLAY,
-    SUPPORT_PAUSE,
-    SUPPORT_NEXT_TRACK,
-    SUPPORT_PREVIOUS_TRACK,
-    SUPPORT_SELECT_SOURCE,
     MediaPlayerEntity,
+    MediaPlayerEntityFeature,
 )
-
 from homeassistant.const import (
     CONF_HOST,
     CONF_NAME,
-    STATE_ON,
-    STATE_OFF,
     STATE_IDLE,
+    STATE_OFF,
+    STATE_ON,
     STATE_PAUSED,
     STATE_PLAYING,
 )
-
 from homeassistant.core import HomeAssistant
+import homeassistant.helpers.aiohttp_client as hass_aiohttp
+import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-from homeassistant.helpers.entity_component import EntityComponent
+import homeassistant.util.dt as hass_dt
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -65,15 +55,21 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     }
 )
 
+
 # Create new class from KefAsyncConnector to override the
 # resurect_session method, so that i uses the function
 # async_get_clientsession
 class KefHassAsyncConnector(KefAsyncConnector):
-    def __init__(self, host, session=None, hass=None):
+    """KefAsyncConnector with resurect_session method."""
+
+    def __init__(self, host, session=None, hass=None) -> None:
+        """Initialize the KefAsyncConnector."""
+
         super().__init__(host, session=session)
         self.hass = hass
 
     async def resurect_session(self):
+        """Resurect the session if it is closed."""
         if self._session is None:
             self._session = hass_aiohttp.async_get_clientsession(self.hass)
 
@@ -81,6 +77,8 @@ class KefHassAsyncConnector(KefAsyncConnector):
 # Decorator to delay the update of home assistant UI
 # since the speaker does not update imediately is internal state
 def delay_update(delay):
+    """Delay the update of home assistant UI."""
+
     def inner_function(function):
         @functools.wraps(function)
         async def wrapper(self, *args, **kwargs):
@@ -98,7 +96,7 @@ def delay_update(delay):
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    """Setup platform kef_connector"""
+    """Set up platform kef_connector."""
 
     # Get variables from configuration
     host = config[CONF_HOST]
@@ -130,11 +128,12 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
 
 class KefLS50W2(MediaPlayerEntity):
-    """
-    Media player implementation for KEF LS50W2
-    """
+    """Media player implementation for KEF LS50W2."""
 
-    def __init__(self, host, name, max_volume, volume_step, sources, session, hass):
+    def __init__(
+        self, host, name, max_volume, volume_step, sources, session, hass
+    ) -> None:
+        """Initialize the media player."""
         super().__init__()
         self._speaker = KefHassAsyncConnector(host, session=session, hass=hass)
         if name != "DEFAULT_KEFLS50W2":
@@ -219,43 +218,48 @@ class KefLS50W2(MediaPlayerEntity):
 
     @property
     def media_album_name(self):
+        """Album name of current playing media, music track only."""
         return self._attr_media_album_name
 
     @property
     def media_title(self):
+        """Title of current playing media."""
         return self._attr_media_title
 
     @property
     def media_position(self):
+        """Position of current playing media in seconds."""
         return self._attr_media_position
 
     @property
     def media_position_updated_at(self):
         """When was the position of the current playing media valid.
+
         Returns value from homeassistant.util.dt.utcnow().
         """
+
         return self._attr_media_position_updated_at
 
     @property
     def supported_features(self):
         """Flag media player features that are supported."""
         support_kef = (
-            SUPPORT_VOLUME_SET
-            | SUPPORT_VOLUME_STEP
-            | SUPPORT_VOLUME_MUTE
-            | SUPPORT_TURN_OFF
-            | SUPPORT_TURN_ON
-            | SUPPORT_PREVIOUS_TRACK
-            | SUPPORT_NEXT_TRACK
-            | SUPPORT_PAUSE
-            | SUPPORT_PLAY
-            | SUPPORT_SELECT_SOURCE
+            MediaPlayerEntityFeature.VOLUME_SET
+            | MediaPlayerEntityFeature.VOLUME_STEP
+            | MediaPlayerEntityFeature.VOLUME_MUTE
+            | MediaPlayerEntityFeature.TURN_OFF
+            | MediaPlayerEntityFeature.TURN_ON
+            | MediaPlayerEntityFeature.PREVIOUS_TRACK
+            | MediaPlayerEntityFeature.NEXT_TRACK
+            | MediaPlayerEntityFeature.PAUSE
+            | MediaPlayerEntityFeature.PLAY
+            | MediaPlayerEntityFeature.SELECT_SOURCE
         )
 
         return support_kef
 
     async def async_update(self):
-        """Update latest state"""
+        """Update latest state."""
 
         # Update name and unique_id if needed (the first time)
         if self.name is None:
@@ -313,25 +317,31 @@ class KefLS50W2(MediaPlayerEntity):
 
     @delay_update(5)
     async def async_turn_on(self):
+        """Turn the media player on."""
         await self._speaker.set_source(self._previous_source)
 
     @delay_update(5)
     async def async_turn_off(self):
+        """Turn the media player off."""
         await self._speaker.shutdown()
 
     async def async_volume_up(self):
+        """Volume up the media player."""
         await self._speaker.set_volume(await self._speaker.volume + self._volume_step)
 
     async def async_volume_down(self):
+        """Volume down the media player."""
         await self._speaker.set_volume(await self._speaker.volume - self._volume_step)
 
     async def async_set_volume_level(self, volume):
+        """Set volume level, range 0..1."""
         # make sure volume is not louder than max_volume
         # multiply by 100 to be in range of what KefAsyncConnector expects
         volume = int(min(volume, self._max_volume) * 100)
         await self._speaker.set_volume(volume)
 
     async def async_mute_volume(self, mute):
+        """Mute (true) or unmute (false) media player."""
         if mute:
             await self._speaker.mute()
         else:
@@ -339,25 +349,30 @@ class KefLS50W2(MediaPlayerEntity):
 
     @delay_update(0.5)
     async def async_select_source(self, source):
+        """Select input source."""
         await self._speaker.set_source(source)
 
     @delay_update(0.25)
     async def async_media_play(self):
+        """Send play command."""
         await self._speaker.toggle_play_pause()
 
     @delay_update(0.25)
     async def async_media_pause(self):
+        """Send pause command."""
         await self._speaker.toggle_play_pause()
 
     @delay_update(0.25)
     async def async_media_play_pause(self):
-        """Toggle play pause"""
+        """Toggle play pause."""
         await self._speaker.toggle_play_pause()
 
     @delay_update(1.5)
     async def async_media_next_track(self):
+        """Send next track command."""
         await self._speaker.next_track()
 
     @delay_update(1.5)
     async def async_media_previous_track(self):
+        """Send previous track command."""
         await self._speaker.previous_track()
