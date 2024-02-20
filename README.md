@@ -1,5 +1,6 @@
 # 🏠️↔️🔉 Kef Connector
 A Home Assistant integration for KEF speakers 🔊
+
 Kef Connector is compatible with LSX2LT, LSX2, LS50W2 and LS60.
 
 - [🏠️↔️🔉 Kef Connector](#️️-kef-connector)
