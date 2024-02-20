@@ -23,8 +23,10 @@ from homeassistant.const import (
     STATE_PLAYING,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import entity_registry as er
 import homeassistant.helpers.aiohttp_client as hass_aiohttp
 import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.device_registry import format_mac
 
 # from homeassistant.helpers.entity_component import EntityComponent
 # from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -35,17 +37,27 @@ _LOGGER = logging.getLogger(__name__)
 
 CONF_MAX_VOLUME = "maximum_volume"
 CONF_VOLUME_STEP = "volume_step"
+CONF_SPEAKER_MODEL = "kef_speaker_model"
 
-DEFAULT_NAME = "DEFAULT_KEFLS50W2"
+DEFAULT_NAME = "DEFAULT_KEFSPEAKER"
 DEFAULT_MAX_VOLUME = 1
 DEFAULT_VOLUME_STEP = 0.03
+DEFAULT_SPEAKER_MODEL = "default"
 
 SCAN_INTERVAL = timedelta(seconds=10)
 
 
 DOMAIN = "kef_connector"
 
-SOURCES = ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"]
+SOURCES = {
+    "LSX2": ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
+    "LSX2LT": ["wifi", "bluetooth", "tv", "optical", "usb"],
+    "LS50W2": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
+    "LS60": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
+    "default": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog", "usb"],
+}
+
+UNIQUE_ID_PREFIX = "KEF_SPEAKER"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
     {
@@ -53,8 +65,27 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
         vol.Optional(CONF_MAX_VOLUME, default=DEFAULT_MAX_VOLUME): cv.small_float,
         vol.Optional(CONF_VOLUME_STEP, default=DEFAULT_VOLUME_STEP): cv.small_float,
+        vol.Optional(CONF_SPEAKER_MODEL, default=DEFAULT_SPEAKER_MODEL): cv.string,
     }
 )
+
+
+def migrate_old_unique_ids(hass: HomeAssistant):
+    """Migrate old unique ids to new format."""
+    registry = er.async_get(hass)
+    for entity in registry.entities.values():
+        if entity.platform == DOMAIN:
+            entity_mac_address = entity.unique_id.split("_")[-1]
+            if entity.unique_id == "KEFLS50W2_" + entity_mac_address:
+                _LOGGER.warning(
+                    "Kef Connector found an entity with an old unique_id: %s. It will automatically migrate it to the new unique_id scheme. The entity is : %s",
+                    entity.unique_id,
+                    entity,
+                )
+                registry.async_update_entity(
+                    entity.entity_id,
+                    new_unique_id=f"{UNIQUE_ID_PREFIX}_{format_mac(entity_mac_address)}",
+                )
 
 
 # Create new class from KefAsyncConnector to override the
@@ -114,12 +145,22 @@ async def async_setup_platform(
     name = config[CONF_NAME]
     max_volume = config[CONF_MAX_VOLUME]
     volume_step = config[CONF_VOLUME_STEP]
+    speaker_model = config[CONF_SPEAKER_MODEL]
 
-    # set available sources
-    sources = SOURCES
+    # make sure the speaker model is in uppercase
+    speaker_model = speaker_model.upper()
 
     # get session
     session = hass_aiohttp.async_create_clientsession(hass)
+
+    if speaker_model not in SOURCES:
+        sources = SOURCES["default"]
+    else:
+        sources = SOURCES[speaker_model]
+        _LOGGER.warning(
+            "Kef Speaker model %s is unknown. Using default sources. Please make sure the model is either LSX2, LSX2LT, LS50W2 or LS60",
+            speaker_model,
+        )
 
     _LOGGER.debug(
         "Setting up %s with host: %s, name: %s, sources: %s",
@@ -129,7 +170,10 @@ async def async_setup_platform(
         sources,
     )
 
-    media_player = KefLS50W2(
+    # Migrate old unique ids starting with "KEFLS50W2_" to the new format "KEF_SPEAKER_" + mac_address
+    migrate_old_unique_ids(hass)
+
+    media_player = KefSpeaker(
         host, name, max_volume, volume_step, sources, session, hass
     )
 
@@ -138,8 +182,8 @@ async def async_setup_platform(
     return True
 
 
-class KefLS50W2(MediaPlayerEntity):
-    """Media player implementation for KEF LS50W2."""
+class KefSpeaker(MediaPlayerEntity):
+    """Media player implementation for KEF Speakers."""
 
     def __init__(
         self,
@@ -154,7 +198,7 @@ class KefLS50W2(MediaPlayerEntity):
         """Initialize the media player."""
         super().__init__()
         self._speaker = KefHassAsyncConnector(host, session=session, hass=hass)
-        if name != "DEFAULT_KEFLS50W2":
+        if name != DEFAULT_NAME:
             self._name = name
         else:
             self._name = None
@@ -283,24 +327,27 @@ class KefLS50W2(MediaPlayerEntity):
         if self.name is None:
             self._name = await self._speaker.speaker_name
         if self.unique_id is None:
-            self._attr_unique_id = "KEFLS50W2_" + await self._speaker.mac_address
+            self._attr_unique_id = (
+                f"{UNIQUE_ID_PREFIX}_{format_mac(await self._speaker.mac_address)}"
+            )
 
         # Get speaker volume (from [0,100] to [0,1])
         self._volume = await self._speaker.volume / 100
 
         # Get speaker state.
         # Playing/Idle is available only for bluetooth or wifi
+        spkr_source = await self._speaker.source
         if await self._speaker.status == "standby":
             self._state = STATE_OFF
-        elif await self._speaker.source in ["tv", "optical", "coaxial", "analog"]:
-            self._state = STATE_ON
-        else:
+        elif spkr_source in ["wifi", "bluetooth"]:
             if await self._speaker.is_playing:
                 self._state = STATE_PLAYING
             elif self._attr_media_title is not None:
                 self._state = STATE_PAUSED
             else:
                 self._state = STATE_IDLE
+        else:
+            self._state = STATE_ON
 
         # Check if speaker is muted
         self._muted = True if self._volume == 0 else False
