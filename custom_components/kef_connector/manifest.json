@@ -6,8 +6,8 @@
   ],
   "config_flow": false,
   "documentation": "https://github.com/N0ciple/hass-kef-connector",
-  "iot_class": "local_polling",
   "integration_type": "device",
+  "iot_class": "local_polling",
   "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
   "requirements": [
     "pykefcontrol==0.7.1 "
