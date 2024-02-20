@@ -1,15 +1,16 @@
 {
   "domain": "kef_connector",
   "name": "Kef Connector",
-  "config_flow": false,
-  "version":"0.5.5",
-  "documentation": "https://github.com/N0ciple/hass-kef-connector",
-  "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
-  "requirements": [
-    "pykefcontrol==0.5.1"
-  ],
   "codeowners": [
     "@n0ciple"
   ],
-  "iot_class": "local_polling"
+  "config_flow": false,
+  "documentation": "https://github.com/N0ciple/hass-kef-connector",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker":"https://github.com/N0ciple/hass-kef-connector/issues",
+  "requirements": [
+    "pykefcontrol==0.7.1"
+  ],
+  "version":"0.6.0"
 }
