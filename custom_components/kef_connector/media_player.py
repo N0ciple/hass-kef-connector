@@ -25,10 +25,11 @@ from homeassistant.const import (
 from homeassistant.core import HomeAssistant
 import homeassistant.helpers.aiohttp_client as hass_aiohttp
 import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.entity_component import EntityComponent
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-import homeassistant.util.dt as hass_dt
+
+# from homeassistant.helpers.entity_component import EntityComponent
+# from homeassistant.helpers.entity_platform import AddEntitiesCallback
+# from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+import homeassistant.util.dt as dt_util
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -62,7 +63,12 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
 class KefHassAsyncConnector(KefAsyncConnector):
     """KefAsyncConnector with resurect_session method."""
 
-    def __init__(self, host, session=None, hass=None) -> None:
+    def __init__(
+        self,
+        host,
+        session=None,
+        hass: HomeAssistant | None = None,
+    ) -> None:
         """Initialize the KefAsyncConnector."""
 
         super().__init__(host, session=session)
@@ -95,7 +101,12 @@ def delay_update(delay):
     return inner_function
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_platform(
+    hass: HomeAssistant | None,
+    config,
+    async_add_entities,
+    discovery_info=None,
+):
     """Set up platform kef_connector."""
 
     # Get variables from configuration
@@ -131,7 +142,14 @@ class KefLS50W2(MediaPlayerEntity):
     """Media player implementation for KEF LS50W2."""
 
     def __init__(
-        self, host, name, max_volume, volume_step, sources, session, hass
+        self,
+        host,
+        name,
+        max_volume,
+        volume_step,
+        sources,
+        session,
+        hass: HomeAssistant | None,
     ) -> None:
         """Initialize the media player."""
         super().__init__()
@@ -308,7 +326,7 @@ class KefLS50W2(MediaPlayerEntity):
             # Update media position
             self._attr_media_position = int(await self._speaker.song_status / 1000)
             # Update last media position update
-            self._attr_media_position_updated_at = hass_dt.utcnow()
+            self._attr_media_position_updated_at = dt_util.utcnow()
         else:
             # Set values to None if no media is playing
             self._attr_media_duration = None
