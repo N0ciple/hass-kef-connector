@@ -16,23 +16,7 @@ Kef Connector is compatible with LSX2LT, LSX2, LS50W2, LS60 and XIO Soundbar.
 ### ⬇️ Installation
 This custom component is available on [HACS](https://hacs.xyz) !\
 You can also install it manually, but HACS is the recommended method (see bellow for "manual installation").
-
-**Installation with HACS**\
-1. Go to your Home Assistant instance > HACS tab > `Integrations`.\
-![image](https://user-images.githubusercontent.com/19673370/141852430-c8df83b9-3b94-4b2f-8e59-18ca417cc618.png)
-
-
-2. Clic on `explore & download repository` on the bottom right corner.\
-![image](https://user-images.githubusercontent.com/19673370/141852710-06f85383-41b7-4d9a-86a0-19ccf46e6588.png)
-
-3. Search for _Kef Connector_.\
-![image](https://user-images.githubusercontent.com/19673370/141853121-64676e27-4ef0-4929-8041-7658bb141b8b.png)
-
-4. Clic on Kef Connector > then "Download this repository with HACS" > then Download
-![image](https://user-images.githubusercontent.com/19673370/141853310-83bd3f09-e55d-4814-8400-272e52d3b26e.png)
-
-Now, restart home assistant and then follow the instructions in the [configuration](#-configuration) section.
-
+Simply search for Kef Connector on HACS and clic download. Do not forget to restart home assistant and then follow the instructions in the [configuration](#-configuration) section.
 
 **Manual Installation**\
 Copy the [kef_connector](custom_components/kef_connector) folder in your home assistant `config/custom_components` folder, and then follow the [configuration](#-configuration) section.
