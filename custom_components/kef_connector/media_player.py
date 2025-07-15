@@ -54,6 +54,7 @@ SOURCES = {
     "LSX2LT": ["wifi", "bluetooth", "tv", "optical", "usb"],
     "LS50W2": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     "LS60": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
+    "XIO": ["wifi", "bluetooth", "tv", "optical"],
     "default": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog", "usb"],
 }
 
