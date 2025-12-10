@@ -1,0 +1,83 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up KEF Speaker",
+        "description": "Configure your KEF speaker manually by IP address",
+        "data": {
+          "host": "IP Address",
+          "speaker_model": "Speaker Model",
+          "scan_interval": "Scan Interval (seconds)",
+          "offline_retry_interval": "Offline Retry Interval (seconds)",
+          "volume_step": "Volume Step",
+          "maximum_volume": "Maximum Volume"
+        },
+        "data_description": {
+          "host": "The IP address of your KEF speaker",
+          "speaker_model": "Determines available input sources. Auto-detected from Google Cast name.",
+          "scan_interval": "How often to update speaker status when online. Lower = more responsive, higher = less network traffic. (5-300 seconds)",
+          "offline_retry_interval": "How often to check if an offline speaker is back online. Higher values reduce log spam. (30-600 seconds)",
+          "volume_step": "Volume change per up/down command. 0.05 = 5% per step. (0.01-0.10)",
+          "maximum_volume": "Safety limit to prevent accidental loud volume. 1.0 = 100% maximum. (0.1-1.0)"
+        }
+      },
+      "zeroconf_confirm": {
+        "title": "Discovered KEF Speaker: {name}",
+        "description": "Auto-discovered on your network at {host}. Verify settings below.",
+        "data": {
+          "speaker_model": "Speaker Model",
+          "scan_interval": "Scan Interval (seconds)",
+          "offline_retry_interval": "Offline Retry Interval (seconds)",
+          "volume_step": "Volume Step",
+          "maximum_volume": "Maximum Volume"
+        },
+        "data_description": {
+          "speaker_model": "Determines available input sources. Auto-detected from Google Cast name.",
+          "scan_interval": "How often to update speaker status when online. Lower = more responsive, higher = less network traffic. (5-300 seconds)",
+          "offline_retry_interval": "How often to check if an offline speaker is back online. Higher values reduce log spam. (30-600 seconds)",
+          "volume_step": "Volume change per up/down command. 0.05 = 5% per step. (0.01-0.10)",
+          "maximum_volume": "Safety limit to prevent accidental loud volume. 1.0 = 100% maximum. (0.1-1.0)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the KEF speaker. Please check the IP address and ensure the speaker is powered on and connected to your network."
+    },
+    "abort": {
+      "already_configured": "This KEF speaker is already configured.",
+      "cannot_connect": "Could not connect to the KEF speaker.",
+      "not_kef_device": "Device is not a KEF speaker."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "KEF Speaker Options",
+        "description": "Configure advanced settings for your KEF speaker",
+        "data": {
+          "scan_interval": "Scan Interval (seconds)",
+          "offline_retry_interval": "Offline Retry Interval (seconds)",
+          "volume_step": "Volume Step",
+          "maximum_volume": "Maximum Volume"
+        },
+        "data_description": {
+          "scan_interval": "How often to update speaker status when online. Lower = more responsive, higher = less network traffic. (5-300 seconds)",
+          "offline_retry_interval": "How often to check if an offline speaker is back online. Higher values reduce log spam. (30-600 seconds)",
+          "volume_step": "Volume change per up/down command. 0.05 = 5% per step. (0.01-0.10)",
+          "maximum_volume": "Safety limit to prevent accidental loud volume. 1.0 = 100% maximum. (0.1-1.0)"
+        }
+      }
+    }
+  },
+  "selector": {
+    "speaker_model": {
+      "options": {
+        "LSX2": "KEF LSX II (Wi-Fi, Bluetooth, TV, Optical, Analog, USB)",
+        "LSX2LT": "KEF LSX II LT (Wi-Fi, Bluetooth, TV, Optical, USB)",
+        "LS50W2": "KEF LS50 Wireless II (Wi-Fi, Bluetooth, TV, Optical, Coaxial, Analog)",
+        "LS60": "KEF LS60 Wireless (Wi-Fi, Bluetooth, TV, Optical, Coaxial, Analog)",
+        "XIO": "KEF XIO (Wi-Fi, Bluetooth, TV, Optical)"
+      }
+    }
+  }
+}
