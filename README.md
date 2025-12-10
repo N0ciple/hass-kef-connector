@@ -1,58 +1,67 @@
-# 🏠️↔️🔉 Kef Connector
+# 🏠🔉 KEF Connector
 A Home Assistant integration for KEF speakers 🔊
 
-Kef Connector is compatible with LSX2LT, LSX2, LS50W2, LS60 and XIO Soundbar.
+KEF Connector is compatible with W2 Platform speakers:
+- LSX II  
+- LSX II LT  
+- LS50 Wireless II  
+- LS60 Wireless  
+- XIO Soundbar  
 
-- [🏠️↔️🔉 Kef Connector](#️️-kef-connector)
-  - [Installation and configuration](#installation-and-configuration)
-    - [⬇️ Installation](#️-installation)
-    - [🔧 Configuration](#-configuration)
-      - [📜 Platform configuration options](#-platform-configuration-options)
-      - [🧑‍🔬 Full configuration example](#-full-configuration-example)
+---
 
+## 📦 Installation
 
-## Installation and configuration
+This custom component is available via [HACS](https://hacs.xyz).  
+Search for **KEF Connector** in HACS and click **Download**. Restart Home Assistant to complete installation.
 
-### ⬇️ Installation
-This custom component is available on [HACS](https://hacs.xyz) !\
-You can also install it manually, but HACS is the recommended method (see bellow for "manual installation").
-Simply search for Kef Connector on HACS and clic download. Do not forget to restart home assistant and then follow the instructions in the [configuration](#-configuration) section.
+**Manual installation**  
+Copy the [`kef_connector`](custom_components/kef_connector) folder into your Home Assistant `config/custom_components` directory. Restart Home Assistant to activate the integration.
 
-**Manual Installation**\
-Copy the [kef_connector](custom_components/kef_connector) folder in your home assistant `config/custom_components` folder, and then follow the [configuration](#-configuration) section.
+---
 
-### 🔧 Configuration
+## ⚙️ Configuration
 
-In your `configuration.yaml` file, add the following :
+KEF Connector uses **Config Flow** and is configured entirely through the **Home Assistant UI**.  
+**YAML configuration is no longer supported.**
 
-```yaml
-media_player:
-  - platform: kef_connector
-    host: <IP-of-your-speakers>
-```
-⚠️ _Replace_ `<IP-of-your-speakers>` _with the correct IP._ 
+You can add the integration manually or wait for it to be discovered.
 
-More information on how to find the IP of your Kef speakers [here](https://github.com/N0ciple/pykefcontrol#-get-the-ip-address).
+### 🔍 Auto Discovery
+When your KEF speaker is discovered via Google Cast or AirPlay:
+- **Name**, **IP Address** and **Speaker Model** are automatically filled in.
+- You can review and adjust parameters before completing setup.
 
-#### 📜 Platform configuration options
+### 🛠 Manual Setup
+If your speaker isn’t discovered automatically, you can add it manually via the Integrations page.  
+You’ll be prompted to enter:
 
-Here is the list of the variables you can set if your `configuration.yaml` file.
+| Field                     | Description                                                                 |
+|--------------------------|-----------------------------------------------------------------------------|
+| **IP Address**            | IP of your KEF speaker (e.g. `192.168.1.42`)                                |
+| **Speaker Model**         | Choose from LSX II, LSX II LT, LS50 Wireless II, LS60 Wireless, or XIO      |
+| **Scan Interval**         | How often to poll the speaker when online (5–300 seconds)                   |
+| **Offline Retry Interval**| How often to check if an offline speaker is back online (30–600 seconds)    |
+| **Volume Step**           | Volume change per up/down command (0.01–0.10)                               |
+| **Maximum Volume**        | Safety limit for volume (0.1–1.0)                                           |
 
-| option           | required     | default value | comment|
-| ---------------- | ------------ | -------------|-------------------- |
-| `host`           | **Required** | `None`        | This should be a string in the form `www.xxx.yyy.zzz`, being the IP address of your speakers.|
-| `name`           | _Optional_   | _see comment_ | If you do not specify a `name`, the integration will fetch the name you set up on the KefConnect app for your speakers, if any. If you specify a `name` property, this name will be used instead.|
-| `maximum_volume` | _Optional_   | `1.0`         | This should be a float between 0 and 1. 0 is muted and 1 is maximum volume. Bear in mind that this option **does not** override the maximum volume set in the KefConnect app. It will prevent hass from setting a volume higher than `maximum_volume`|
-| `volume_step`    | _Optional_   | `0.03`        | This should be float bewteen 0 and 1 (however it is **not recommended** to set it higher than 0.1). This value is by how much volume will be changed when calling   `media_player.volume_up` or `media_player.volume_down` services, by clicking on ![volume_down_up](assets/images/volume_down_up.png) for example. |
-| `speaker_model`  | _Optional_   | _see comment_ | Write the model of your KEF speakers (either `LSX2`, `LSX2LT`, `LS50W2`, `LS60` or `XIO`). This allows Kef Connector to know which sources are available on your speakers. If you do not put `speaker_model` in your `configuration.yaml`, by default, all sources will be available on the entity, even though they are not physically present on your speakers (for example, there is no analog input on the LSX2LT). |
-#### 🧑‍🔬 Full configuration example
-This is just and example ! You can copy it but **at least** change the `host` value to the IP address of you speakers. More info on how to find the IP address [here](https://github.com/N0ciple/pykefcontrol#-get-the-ip-address).
-```yaml
-media_player:
-  - platform: kef_connector
-    host: 192.168.1.42
-    name: "My Kef Speakers"
-    maximum_volume: 0.7
-    volume_step: 0.02
-    speaker_model: LS50W2
-```
+All these settings can be changed later from the **Integration settings page**.
+
+---
+
+## 🔁 Migrating from YAML
+
+If you previously configured KEF Connector via `configuration.yaml`:
+- Remove any `kef_connector` entries from your YAML file.
+- Install or enable the integration via the UI:  
+  **Settings → Devices & Services → Add Integration → KEF Connector**
+- Recreate your previous settings during setup.  
+  All parameters are editable later from the Integration page — no restart required.
+
+---
+
+## 📚 Documentation & Support
+
+- [KEF Connector GitHub](https://github.com/N0ciple/hass-kef-connector)  
+- [Issue Tracker](https://github.com/N0ciple/hass-kef-connector/issues)  
+- [Library used: pykefcontrol](https://github.com/N0ciple/pykefcontrol)
