@@ -48,28 +48,6 @@ class KefHassAsyncConnector(KefAsyncConnector):
         if self._session is None:
             self._session = aiohttp_client.async_get_clientsession(self.hass)
 
-    async def get_request(self, path, roles="value"):
-        """Generic method to get data from any API path.
-
-        Args:
-            path: API path to query (e.g., "kef:eqProfile", "network:info")
-            roles: API roles parameter (default: "value")
-
-        Returns:
-            JSON response from API
-        """
-        payload = {
-            "path": path,
-            "roles": roles,
-        }
-        await self.resurect_session()
-        async with self._session.get(
-            "http://" + self.host + "/api/getData", params=payload
-        ) as response:
-            json_output = await response.json()
-
-        return json_output
-
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up KEF Connector from a config entry."""

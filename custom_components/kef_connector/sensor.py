@@ -6,6 +6,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import format_mac
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -73,6 +74,9 @@ async def async_setup_entry(
             KefCodecSensor(coordinator, entry, name, device_info),
             KefVirtualizerSensor(coordinator, entry, name, device_info),
             KefSampleRateSensor(coordinator, entry, name, device_info),
+            KefRawCodecSensor(coordinator, entry, name, device_info),
+            KefStreamChannelsSensor(coordinator, entry, name, device_info),
+            KefAudioChannelsSensor(coordinator, entry, name, device_info),
         ])
 
     # WiFi sensors - all models
@@ -110,13 +114,18 @@ class KefCodecSensor(CoordinatorEntity, SensorEntity):
         # Split on " - " and get codec part (before '-')
         codec_name = codec_full.split(" - ")[0] if " - " in codec_full else codec_full
 
-        # Append channel format from stream_channels (source channels)
+        # Strip "Dolby " prefix from PCM (but NOT from "Dolby Digital" or "Dolby Digital Plus")
+        if codec_name == "Dolby PCM":
+            codec_name = "PCM"
+
+        # Append channel format from stream_channels (source/input channels)
         stream_channels = self.coordinator.data.get("stream_channels")
         if stream_channels is not None and stream_channels > 0:
             channel_format = _format_channels(stream_channels)
             if channel_format:
                 return f"{codec_name} {channel_format}"
 
+        # Fallback: just return codec name without channel count
         return codec_name
 
     @property
@@ -154,13 +163,24 @@ class KefVirtualizerSensor(CoordinatorEntity, SensorEntity):
         # Split on " - " and get virtualizer part (after '-'), or "Direct" if not present
         virtualizer_name = codec_full.split(" - ")[1] if " - " in codec_full else "Direct"
 
-        # Append channel format from audio_channels (playback channels)
-        audio_channels = self.coordinator.data.get("audio_channels")
-        if audio_channels is not None:
-            channel_format = _format_channels(audio_channels)
+        # For Direct mode: use INPUT channels (stream_channels), fallback to OUTPUT channels
+        # For virtualizer modes: use fixed 8 channels (5.1.2) since API returns garbage
+        if virtualizer_name == "Direct":
+            # Direct mode - use input channels, fallback to output if input unknown
+            channels = self.coordinator.data.get("stream_channels")
+            if channels is None or channels == 0:
+                # Fallback to playback channels (e.g., Dolby Atmos with unknown input)
+                channels = self.coordinator.data.get("audio_channels")
+        else:
+            # Virtualizer active - hardcode to 8 (5.1.2) for XIO
+            channels = 8
+
+        if channels is not None and channels > 0:
+            channel_format = _format_channels(channels)
             if channel_format:
                 return f"{virtualizer_name} {channel_format}"
 
+        # Fallback: just return virtualizer name without channel count
         return virtualizer_name
 
     @property
@@ -181,7 +201,7 @@ class KefSampleRateSensor(CoordinatorEntity, SensorEntity):
         """Initialize the sensor."""
         super().__init__(coordinator)
         self._attr_name = f"{name} Audio Sample Rate"
-        self._attr_unique_id = f"{entry.entry_id}_sample_rate"
+        self._attr_unique_id = f"{entry.entry_id}_audio_sample_rate"
         self._attr_native_unit_of_measurement = "Hz"
         self._attr_icon = "mdi:sine-wave"
         self._attr_device_info = device_info
@@ -199,6 +219,102 @@ class KefSampleRateSensor(CoordinatorEntity, SensorEntity):
         return (
             self.coordinator.last_update_success
             and self.coordinator.data.get("sample_rate") is not None
+        )
+
+
+class KefRawCodecSensor(CoordinatorEntity, SensorEntity):
+    """Sensor for raw/unparsed audio codec string from API."""
+
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self, coordinator: KefCoordinator, entry: ConfigEntry, name: str, device_info: dict
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._attr_name = f"{name} Audio Codec Raw"
+        self._attr_unique_id = f"{entry.entry_id}_audio_codec_raw"
+        self._attr_icon = "mdi:information-outline"
+        self._attr_device_info = device_info
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    @property
+    def native_value(self) -> str | None:
+        """Return the raw codec string without any processing."""
+        if not self.coordinator.last_update_success:
+            return None
+        return self.coordinator.data.get("audio_codec_raw")
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return (
+            self.coordinator.last_update_success
+            and self.coordinator.data.get("audio_codec_raw") is not None
+        )
+
+
+class KefStreamChannelsSensor(CoordinatorEntity, SensorEntity):
+    """Sensor for source/input audio channels from API (diagnostic, disabled by default)."""
+
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self, coordinator: KefCoordinator, entry: ConfigEntry, name: str, device_info: dict
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._attr_name = f"{name} Audio Source Channels"
+        self._attr_unique_id = f"{entry.entry_id}_stream_channels"
+        self._attr_icon = "mdi:audio-input-stereo-minijack"
+        self._attr_device_info = device_info
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    @property
+    def native_value(self) -> int | None:
+        """Return the source channel count from API (streamChannels field)."""
+        if not self.coordinator.last_update_success:
+            return None
+        return self.coordinator.data.get("stream_channels")
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return (
+            self.coordinator.last_update_success
+            and self.coordinator.data.get("stream_channels") is not None
+        )
+
+
+class KefAudioChannelsSensor(CoordinatorEntity, SensorEntity):
+    """Sensor for playback/output audio channels from API (diagnostic, disabled by default)."""
+
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self, coordinator: KefCoordinator, entry: ConfigEntry, name: str, device_info: dict
+    ) -> None:
+        """Initialize the sensor."""
+        super().__init__(coordinator)
+        self._attr_name = f"{name} Audio Playback Channels"
+        self._attr_unique_id = f"{entry.entry_id}_audio_channels"
+        self._attr_icon = "mdi:speaker-multiple"
+        self._attr_device_info = device_info
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+    @property
+    def native_value(self) -> int | None:
+        """Return the playback channel count from API (nrAudioChannels field)."""
+        if not self.coordinator.last_update_success:
+            return None
+        return self.coordinator.data.get("audio_channels")
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        return (
+            self.coordinator.last_update_success
+            and self.coordinator.data.get("audio_channels") is not None
         )
 
 

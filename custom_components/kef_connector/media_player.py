@@ -248,6 +248,10 @@ class KefSpeaker(CoordinatorEntity, MediaPlayerEntity):
             # Split codec to get only the codec part (before " - ")
             codec_name = audio_codec.split(" - ")[0] if " - " in audio_codec else audio_codec
 
+            # Strip "Dolby " prefix from PCM (but NOT from "Dolby Digital" or "Dolby Digital Plus")
+            if codec_name == "Dolby PCM":
+                codec_name = "PCM"
+
             # Build codec string with channel format
             codec_display = codec_name
             if channel_format:
@@ -319,6 +323,10 @@ class KefSpeaker(CoordinatorEntity, MediaPlayerEntity):
             codec_name = codec_full.split(" - ")[0] if " - " in codec_full else codec_full
             virtualizer_name = codec_full.split(" - ")[1] if " - " in codec_full else "Direct"
 
+            # Strip "Dolby " prefix from PCM (but NOT from "Dolby Digital" or "Dolby Digital Plus")
+            if codec_name == "Dolby PCM":
+                codec_name = "PCM"
+
             # Helper to format channel count
             def format_channels(count):
                 channel_map = {2: "2.0", 6: "5.1", 8: "5.1.2"}
@@ -330,19 +338,36 @@ class KefSpeaker(CoordinatorEntity, MediaPlayerEntity):
                 channel_format = format_channels(stream_channels)
                 attrs["audio_codec"] = f"{codec_name} {channel_format}" if channel_format else codec_name
             else:
+                # Fallback: just codec name without channel count
                 attrs["audio_codec"] = codec_name
 
-            # Add virtualizer with playback channel format
-            audio_channels = self.coordinator.data.get("audio_channels")
-            if audio_channels is not None:
-                channel_format = format_channels(audio_channels)
+            # Add virtualizer with channel format
+            # For Direct mode: use INPUT channels (stream_channels), fallback to OUTPUT channels
+            # For virtualizer modes: use fixed 8 channels (5.1.2) since API returns garbage
+            if virtualizer_name == "Direct":
+                # Direct mode - use input channels, fallback to output if input unknown
+                channels = stream_channels
+                if channels is None or channels == 0:
+                    # Fallback to playback channels (e.g., Dolby Atmos with unknown input)
+                    channels = self.coordinator.data.get("audio_channels")
+            else:
+                # Virtualizer active - hardcode to 8 (5.1.2) for XIO
+                channels = 8
+
+            if channels is not None and channels > 0:
+                channel_format = format_channels(channels)
                 attrs["audio_virtualizer"] = f"{virtualizer_name} {channel_format}" if channel_format else virtualizer_name
             else:
+                # Fallback: just virtualizer name without channel count
                 attrs["audio_virtualizer"] = virtualizer_name
 
         # Sample rate
         if self.coordinator.data.get("sample_rate"):
-            attrs["sample_rate"] = self.coordinator.data["sample_rate"]
+            attrs["audio_sample_rate"] = self.coordinator.data["sample_rate"]
+
+        # Raw codec (unparsed)
+        if self.coordinator.data.get("audio_codec_raw"):
+            attrs["audio_codec_raw"] = self.coordinator.data["audio_codec_raw"]
 
         # Streaming service ID (e.g., "airplay", "spotify")
         if self.coordinator.data.get("streaming_service"):
