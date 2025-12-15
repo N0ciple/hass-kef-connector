@@ -19,6 +19,7 @@ DEFAULT_OFFLINE_RETRY_INTERVAL: Final = 60  # seconds
 DEFAULT_VOLUME_STEP: Final = 0.05
 DEFAULT_MAX_VOLUME: Final = 1.0
 DEFAULT_SPEAKER_MODEL: Final = "LSX2"
+DEFAULT_FAILURE_THRESHOLD: Final = 3  # consecutive failures before marking offline
 
 # Validation ranges
 MIN_SCAN_INTERVAL: Final = 5

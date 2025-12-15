@@ -38,37 +38,16 @@ class KefHassAsyncConnector(KefAsyncConnector):
         host: str,
         session=None,
         hass: HomeAssistant | None = None,
+        model: str | None = None,
     ) -> None:
         """Initialize the KefAsyncConnector."""
-        super().__init__(host, session=session)
+        super().__init__(host, session=session, model=model)
         self.hass = hass
 
     async def resurect_session(self):
         """Resurect the session if it is closed."""
         if self._session is None:
             self._session = aiohttp_client.async_get_clientsession(self.hass)
-
-    async def get_request(self, path, roles="value"):
-        """Generic method to get data from any API path.
-
-        Args:
-            path: API path to query (e.g., "kef:eqProfile", "network:info")
-            roles: API roles parameter (default: "value")
-
-        Returns:
-            JSON response from API
-        """
-        payload = {
-            "path": path,
-            "roles": roles,
-        }
-        await self.resurect_session()
-        async with self._session.get(
-            "http://" + self.host + "/api/getData", params=payload
-        ) as response:
-            json_output = await response.json()
-
-        return json_output
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -85,8 +64,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Create aiohttp session
     session = aiohttp_client.async_get_clientsession(hass)
 
+    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSX2").upper()
+
     # Create KEF speaker connector
-    speaker = KefHassAsyncConnector(host, session=session, hass=hass)
+    speaker = KefHassAsyncConnector(host, session=session, hass=hass, model=speaker_model)
 
     # Create coordinator
     coordinator = KefCoordinator(
@@ -95,6 +76,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         name,
         scan_interval,
         offline_retry_interval,
+        speaker_model=speaker_model,
     )
 
     # Fetch initial data

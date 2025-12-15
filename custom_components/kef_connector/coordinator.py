@@ -25,14 +25,19 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         name: str,
         scan_interval: int,
         offline_retry_interval: int,
+        speaker_model: str = "LSX2",
     ) -> None:
         """Initialize the coordinator."""
         self.speaker = speaker
         self.name = name
+        self.speaker_model = speaker_model.upper()
         self.normal_interval = timedelta(seconds=scan_interval)
         self.offline_interval = timedelta(seconds=offline_retry_interval)
         self._is_offline = False
         self._error_logged = False
+        self._consecutive_failures = 0
+        self._failure_threshold = 3  # Number of consecutive failures before switching to offline mode
+        self._last_successful_data: dict[str, Any] | None = None
 
         super().__init__(
             hass,
@@ -69,10 +74,10 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 song_position = await self.speaker.song_status
 
             # Get codec info (available on models with HDMI/TV inputs)
-            codec_info = await self._get_audio_codec_information()
+            codec_info = await self.speaker.get_audio_codec_information()
 
             # Get WiFi signal strength
-            wifi_info = await self._get_wifi_information()
+            wifi_info = await self.speaker.get_wifi_information()
 
             # Speaker is online - reset offline state
             if self._is_offline:
@@ -85,7 +90,11 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 # Return to normal polling interval
                 self.update_interval = self.normal_interval
 
-            return {
+            # Reset failure counter on successful update
+            self._consecutive_failures = 0
+
+            # Cache successful data for use during transient failures
+            data = {
                 "volume": volume,
                 "status": status,
                 "source": source,
@@ -99,6 +108,7 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 "song_position": song_position,
                 # Codec information (may be None on some sources/models)
                 "audio_codec": codec_info.get("codec"),
+                "audio_codec_raw": codec_info.get("codec"),
                 "sample_rate": codec_info.get("sampleFrequency"),
                 "stream_channels": codec_info.get("streamChannels"),
                 "audio_channels": codec_info.get("nrAudioChannels"),
@@ -109,90 +119,51 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 "wifi_frequency": wifi_info.get("frequency"),
                 "wifi_bssid": wifi_info.get("bssid"),
             }
+            self._last_successful_data = data
+            return data
 
         except Exception as err:
-            # Speaker is offline or unreachable
-            if not self._is_offline:
-                # First time seeing this error - log it and switch to offline mode
-                _LOGGER.warning(
-                    "KEF speaker '%s' is offline or unreachable: %s. "
-                    "Will retry every %d seconds until it comes back online",
+            # Increment consecutive failure counter
+            self._consecutive_failures += 1
+
+            # Check if we've reached the threshold for marking as offline
+            if self._consecutive_failures >= self._failure_threshold:
+                # Now consider the speaker truly offline
+                if not self._is_offline:
+                    # First time marking as offline - log warning and switch to slow polling
+                    _LOGGER.warning(
+                        "KEF speaker '%s' is offline or unreachable after %d consecutive failures: %s. "
+                        "Will retry every %d seconds until it comes back online",
+                        self.name,
+                        self._consecutive_failures,
+                        err,
+                        self.offline_interval.total_seconds(),
+                    )
+                    self._is_offline = True
+                    self._error_logged = True
+                    # Switch to slower retry interval
+                    self.update_interval = self.offline_interval
+
+                # Raise UpdateFailed to mark entity as unavailable
+                raise UpdateFailed(f"Error communicating with KEF speaker: {err}") from err
+
+            else:
+                # Still within tolerance - log as debug and return cached data
+                _LOGGER.debug(
+                    "KEF speaker '%s' connection attempt %d/%d failed: %s. "
+                    "Using cached data and retrying at normal interval",
                     self.name,
+                    self._consecutive_failures,
+                    self._failure_threshold,
                     err,
-                    self.offline_interval.total_seconds(),
                 )
-                self._is_offline = True
-                self._error_logged = True
-                # Switch to slower retry interval
-                self.update_interval = self.offline_interval
 
-            # Raise UpdateFailed to mark entity as unavailable
-            raise UpdateFailed(f"Error communicating with KEF speaker: {err}") from err
+                # If we have cached data, return it to keep entity available
+                if self._last_successful_data is not None:
+                    return self._last_successful_data
 
-    async def _get_audio_codec_information(self) -> dict[str, Any]:
-        """Get audio codec information from player data.
-
-        Returns dict with codec, sample rate, and channel information.
-        """
-        try:
-            # Get player data from speaker
-            player_data = await self.speaker._get_player_data()
-
-            codec_dict = {}
-            active_resource = (
-                player_data.get("trackRoles", {})
-                .get("mediaData", {})
-                .get("activeResource", {})
-            )
-
-            if active_resource:
-                codec_dict["codec"] = active_resource.get("codec")
-                codec_dict["sampleFrequency"] = active_resource.get("sampleFrequency")
-                codec_dict["streamSampleRate"] = active_resource.get("streamSampleRate")
-                codec_dict["streamChannels"] = active_resource.get("streamChannels")
-                codec_dict["nrAudioChannels"] = active_resource.get("nrAudioChannels")
-
-            # Get streaming service ID from mediaRoles
-            media_roles = player_data.get("mediaRoles", {})
-            meta_data = media_roles.get("mediaData", {}).get("metaData", {})
-            if meta_data:
-                codec_dict["serviceID"] = meta_data.get("serviceID")
-
-            return codec_dict
-        except Exception:
-            # Silently return empty dict if codec info not available
-            return {}
-
-    async def _get_wifi_information(self) -> dict[str, Any]:
-        """Get WiFi information from speaker.
-
-        Returns dict with WiFi signal strength, SSID, frequency, and BSSID.
-        """
-        try:
-            # Get network info from speaker
-            network_data = await self.speaker.get_request(
-                "network:info", roles="value"
-            )
-
-            wifi_dict = {}
-            network_info = (
-                network_data[0].get("networkInfo", {})
-                if network_data
-                else {}
-            )
-
-            if network_info:
-                wireless = network_info.get("wireless", {})
-                if wireless:
-                    wifi_dict["signalLevel"] = wireless.get("signalLevel")
-                    wifi_dict["ssid"] = wireless.get("ssid")
-                    wifi_dict["frequency"] = wireless.get("frequency")
-                    wifi_dict["bssid"] = wireless.get("bssid")
-
-            return wifi_dict
-        except Exception:
-            # Silently return empty dict if WiFi info not available
-            return {}
+                # No cached data yet (first poll ever failed) - have to mark unavailable
+                raise UpdateFailed(f"Initial connection failed (attempt {self._consecutive_failures}/{self._failure_threshold}): {err}") from err
 
     def update_intervals(self, scan_interval: int, offline_retry_interval: int) -> None:
         """Update the polling intervals from options."""
