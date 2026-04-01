@@ -1,3 +1,8 @@
+> [!WARNING]
+> Version 4.0 of the firmware adds a password to protect the webui. 
+> I am currenlty working to see if it is possible to adapt pykefcontrol.
+
+
 # 🏠️↔️🔉 Kef Connector
 A Home Assistant integration for KEF speakers 🔊
 
