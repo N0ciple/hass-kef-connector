@@ -100,10 +100,11 @@ class KefHassAsyncConnector(KefAsyncConnector):
         host,
         session=None,
         hass: HomeAssistant | None = None,
+        model=None,
     ) -> None:
         """Initialize the KefAsyncConnector."""
 
-        super().__init__(host, session=session)
+        super().__init__(host, session=session, model=model)
         self.hass = hass
 
     async def resurect_session(self):
@@ -163,6 +164,14 @@ async def async_setup_platform(
     else:
         sources = SOURCES[speaker_model]
 
+    # Pass model to the connector if explicitly configured
+    if speaker_model == "default":
+        speaker_model = None
+        _LOGGER.warning(
+            "No speaker_model configured. The model will be auto-detected via an API call. "
+            "Please set speaker_model in your configuration as this will become mandatory in a future version."
+        )
+
     _LOGGER.debug(
         "Setting up %s with host: %s, name: %s, sources: %s",
         DOMAIN,
@@ -175,7 +184,7 @@ async def async_setup_platform(
     migrate_old_unique_ids(hass)
 
     media_player = KefSpeaker(
-        host, name, max_volume, volume_step, sources, session, hass
+        host, name, max_volume, volume_step, sources, session, hass, speaker_model
     )
 
     async_add_entities([media_player], update_before_add=True)
@@ -195,10 +204,11 @@ class KefSpeaker(MediaPlayerEntity):
         sources,
         session,
         hass: HomeAssistant | None,
+        model=None,
     ) -> None:
         """Initialize the media player."""
         super().__init__()
-        self._speaker = KefHassAsyncConnector(host, session=session, hass=hass)
+        self._speaker = KefHassAsyncConnector(host, session=session, hass=hass, model=model)
         if name != DEFAULT_NAME:
             self._name = name
         else:
