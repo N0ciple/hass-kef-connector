@@ -123,6 +123,12 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return data
 
         except Exception as err:
+            # Reset the aiohttp session so the next poll starts with a clean
+            # connection pool. A failed/interrupted request can leave the
+            # session's C-level state corrupted; resurect_session() will create
+            # a fresh one on the next call.
+            await self.speaker.close_session()
+
             # Increment consecutive failure counter
             self._consecutive_failures += 1
 
