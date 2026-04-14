@@ -73,8 +73,12 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 song_length = await self.speaker.song_length
                 song_position = await self.speaker.song_status
 
-            # Get codec info (available on models with HDMI/TV inputs)
-            codec_info = await self.speaker.get_audio_codec_information()
+            # Get codec info (XIO only — other models only support LPCM)
+            codec_info = (
+                await self.speaker.get_audio_codec_information()
+                if self.speaker_model == "XIO"
+                else {}
+            )
 
             # Get WiFi signal strength
             wifi_info = await self.speaker.get_wifi_information()
