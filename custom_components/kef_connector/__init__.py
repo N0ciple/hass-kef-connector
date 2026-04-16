@@ -49,6 +49,10 @@ class KefHassAsyncConnector(KefAsyncConnector):
         if self._session is None:
             self._session = aiohttp_client.async_get_clientsession(self.hass)
 
+    async def close_session(self):
+        """Do not close the shared HA session — HA owns it."""
+        self._session = None  # Reset reference so resurect_session() refreshes it next call
+
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up KEF Connector from a config entry."""
