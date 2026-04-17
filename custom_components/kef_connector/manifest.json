@@ -12,5 +12,5 @@
   "requirements": [
     "pykefcontrol==0.9.1"
   ],
-  "version":"0.6.0"
+  "version":"0.6.4"
 }
