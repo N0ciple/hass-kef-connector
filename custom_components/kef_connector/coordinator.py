@@ -70,8 +70,11 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             song_length = None
             song_position = None
             if is_playing:
-                song_length = await self.speaker.song_length
-                song_position = await self.speaker.song_status
+                try:
+                    song_length = await self.speaker.song_length
+                    song_position = await self.speaker.song_status
+                except Exception:
+                    pass
 
             # Get codec info (XIO only — other models only support LPCM)
             codec_info = (
