@@ -18,7 +18,7 @@ DEFAULT_SCAN_INTERVAL: Final = 10  # seconds
 DEFAULT_OFFLINE_RETRY_INTERVAL: Final = 60  # seconds
 DEFAULT_VOLUME_STEP: Final = 0.05
 DEFAULT_MAX_VOLUME: Final = 1.0
-DEFAULT_SPEAKER_MODEL: Final = "LSX2"
+DEFAULT_SPEAKER_MODEL: Final = "LSXII"
 DEFAULT_FAILURE_THRESHOLD: Final = 3  # consecutive failures before marking offline
 
 # Validation ranges
@@ -33,29 +33,29 @@ MAX_MAX_VOLUME: Final = 1.0
 
 # Speaker models and their available sources
 SOURCES: Final = {
-    "LSX2": ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
-    "LSX2LT": ["wifi", "bluetooth", "tv", "optical", "usb"],
-    "LS50W2": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
-    "LS60": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
+    "LSXII": ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
+    "LSXIILT": ["wifi", "bluetooth", "tv", "optical", "usb"],
+    "LS50WII": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
+    "LS60Wireless": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
     "XIO": ["wifi", "bluetooth", "tv", "optical"],
 }
 
 # KEF speaker model prefixes for zeroconf filtering
 # Order matters: check more specific patterns first (LSX-II-LT- before LSX-II-)
 KEF_ZEROCONF_PREFIXES: Final = [
-    "LSX-II-LT-",      # LSX2LT model
-    "LSX-II-",         # LSX2 model (check after LSX-II-LT-)
-    "LS50-WIRELESS-II-",  # LS50W2 model
-    "LS60-",           # LS60 model
+    "LSX-II-LT-",      # LSXIILT model
+    "LSX-II-",         # LSXII model (check after LSX-II-LT-)
+    "LS50-WIRELESS-II-",  # LS50WII model
+    "LS60-",           # LS60Wireless model
     "XIO-",            # XIO model
 ]
 
 # Speaker model display names
 MODEL_NAMES: Final = {
-    "LSX2": "LSX II",
-    "LSX2LT": "LSX II LT",
-    "LS50W2": "LS50 Wireless II",
-    "LS60": "LS60 Wireless",
+    "LSXII": "LSX II",
+    "LSXIILT": "LSX II LT",
+    "LS50WII": "LS50 Wireless II",
+    "LS60Wireless": "LS60 Wireless",
     "XIO": "XIO",
 }
 

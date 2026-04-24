@@ -74,14 +74,14 @@ async def async_setup_entry(
     # Get config
     name = entry.data[CONF_NAME]
     host = entry.data[CONF_HOST]
-    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSX2").upper()
+    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSXII").upper()
 
     # Get options with defaults
     max_volume = entry.options.get(CONF_MAX_VOLUME, DEFAULT_MAX_VOLUME)
     volume_step = entry.options.get(CONF_VOLUME_STEP, DEFAULT_VOLUME_STEP)
 
     # Get sources for this model
-    sources = SOURCES.get(speaker_model, SOURCES["LSX2"])
+    sources = SOURCES.get(speaker_model, SOURCES["LSXII"])
 
     # Get unique_id from coordinator speaker
     mac_address = format_mac(await coordinator.speaker.mac_address)

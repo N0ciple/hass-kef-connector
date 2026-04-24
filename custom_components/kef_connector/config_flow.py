@@ -44,20 +44,20 @@ def parse_model_from_discovery(discovery_info: zeroconf.ZeroconfServiceInfo) -> 
     """Parse KEF speaker model from zeroconf discovery info.
 
     Google Cast names typically contain the model name.
-    Examples: "KEF LSX2", "KEF LSX2LT", "KEF LS60", etc.
+    Examples: "KEF LSXII", "KEF LSXIILT", "KEF LS60Wireless", etc.
     """
     # Check the service name first (this is where Google Cast puts the device name)
     name = discovery_info.name.upper()
 
     # Check for known models in order of specificity (most specific first)
-    if "LSX2LT" in name or "LSX II LT" in name or "LSX-II-LT" in name:
-        return "LSX2LT"
-    elif "LSX2" in name or "LSX II" in name or "LSX-II" in name:
-        return "LSX2"
-    elif "LS50W2" in name or "LS50 WIRELESS II" in name or "LS50-WIRELESS-II" in name:
-        return "LS50W2"
+    if "LSX II LT" in name or "LSX-II-LT" in name or "LSXIILT" in name:
+        return "LSXIILT"
+    elif "LSX II" in name or "LSX-II" in name or "LSXII" in name:
+        return "LSXII"
+    elif "LS50 WIRELESS II" in name or "LS50-WIRELESS-II" in name or "LS50WII" in name:
+        return "LS50WII"
     elif "LS60" in name:
-        return "LS60"
+        return "LS60Wireless"
     elif "XIO" in name:
         return "XIO"
 
@@ -68,23 +68,23 @@ def parse_model_from_discovery(discovery_info: zeroconf.ZeroconfServiceInfo) -> 
         for key in ["md", "model", "device_model"]:
             if key in properties:
                 model_value = properties[key].upper()
-                if "LSX2LT" in model_value:
-                    return "LSX2LT"
-                elif "LSX2" in model_value:
-                    return "LSX2"
-                elif "LS50W2" in model_value:
-                    return "LS50W2"
+                if "LSXIILT" in model_value or "LSX II LT" in model_value:
+                    return "LSXIILT"
+                elif "LSXII" in model_value or "LSX II" in model_value:
+                    return "LSXII"
+                elif "LS50WII" in model_value or "LS50 WIRELESS II" in model_value:
+                    return "LS50WII"
                 elif "LS60" in model_value:
-                    return "LS60"
+                    return "LS60Wireless"
                 elif "XIO" in model_value:
                     return "XIO"
 
-    # Default to LSX2 if we can't detect
+    # Default to LSXII if we can't detect
     _LOGGER.debug(
-        "Could not detect KEF model from discovery info (name=%s), defaulting to LSX2",
+        "Could not detect KEF model from discovery info (name=%s), defaulting to LSXII",
         discovery_info.name
     )
-    return "LSX2"
+    return "LSXII"
 
 
 def is_kef_speaker(discovery_info: zeroconf.ZeroconfServiceInfo) -> bool:
@@ -120,11 +120,11 @@ async def validate_connection(
             raise ValueError("Unable to retrieve speaker information")
 
         # Note: speaker_model is not available from the API
-        # We'll default to "LSX2" which is the most common model
+        # We'll default to "LSXII" which is the most common model
         return {
             "mac_address": format_mac(mac_address),
             "speaker_name": speaker_name,
-            "speaker_model": "LSX2",
+            "speaker_model": "LSXII",
         }
     except Exception as err:
         _LOGGER.error("Error connecting to KEF speaker at %s: %s", host, err)
@@ -161,7 +161,7 @@ class KefConnectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._abort_if_unique_id_configured()
 
                 # Get user-selected model and options
-                speaker_model = user_input.get(CONF_SPEAKER_MODEL, "LSX2").upper()
+                speaker_model = user_input.get(CONF_SPEAKER_MODEL, "LSXII").upper()
                 options = {
                     CONF_SCAN_INTERVAL: user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
                     CONF_OFFLINE_RETRY_INTERVAL: user_input.get(
@@ -185,9 +185,9 @@ class KefConnectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema({
                 vol.Required(CONF_HOST): str,
-                vol.Required(CONF_SPEAKER_MODEL, default="LSX2"): selector.SelectSelector(
+                vol.Required(CONF_SPEAKER_MODEL, default="LSXII"): selector.SelectSelector(
                     selector.SelectSelectorConfig(
-                        options=["LSX2", "LSX2LT", "LS50W2", "LS60", "XIO"],
+                        options=["LSXII", "LSXIILT", "LS50WII", "LS60Wireless", "XIO"],
                         translation_key="speaker_model",
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )
@@ -276,7 +276,7 @@ class KefConnectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return self.async_abort(reason="cannot_connect")
 
             # Use the user-selected model
-            speaker_model = user_input.get(CONF_SPEAKER_MODEL, "LSX2").upper()
+            speaker_model = user_input.get(CONF_SPEAKER_MODEL, "LSXII").upper()
 
             # Extract options for initial setup
             options = {
@@ -299,13 +299,13 @@ class KefConnectorConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         # Show form with speaker model selection (using detected model as default)
-        detected_model = self._detected_model or "LSX2"
+        detected_model = self._detected_model or "LSXII"
         return self.async_show_form(
             step_id="zeroconf_confirm",
             data_schema=vol.Schema({
                 vol.Required(CONF_SPEAKER_MODEL, default=detected_model): selector.SelectSelector(
                     selector.SelectSelectorConfig(
-                        options=["LSX2", "LSX2LT", "LS50W2", "LS60", "XIO"],
+                        options=["LSXII", "LSXIILT", "LS50WII", "LS60Wireless", "XIO"],
                         translation_key="speaker_model",
                         mode=selector.SelectSelectorMode.DROPDOWN,
                     )

@@ -68,7 +68,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Create aiohttp session
     session = aiohttp_client.async_get_clientsession(hass)
 
-    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSX2").upper()
+    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSXII").upper()
 
     # Create KEF speaker connector
     speaker = KefHassAsyncConnector(host, session=session, hass=hass, model=speaker_model)

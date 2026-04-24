@@ -72,10 +72,10 @@
   "selector": {
     "speaker_model": {
       "options": {
-        "LSX2": "KEF LSX II (Wi-Fi, Bluetooth, TV, Optical, Analog, USB)",
-        "LSX2LT": "KEF LSX II LT (Wi-Fi, Bluetooth, TV, Optical, USB)",
-        "LS50W2": "KEF LS50 Wireless II (Wi-Fi, Bluetooth, TV, Optical, Coaxial, Analog)",
-        "LS60": "KEF LS60 Wireless (Wi-Fi, Bluetooth, TV, Optical, Coaxial, Analog)",
+        "LSXII": "KEF LSX II (Wi-Fi, Bluetooth, TV, Optical, Analog, USB)",
+        "LSXIILT": "KEF LSX II LT (Wi-Fi, Bluetooth, TV, Optical, USB)",
+        "LS50WII": "KEF LS50 Wireless II (Wi-Fi, Bluetooth, TV, Optical, Coaxial, Analog)",
+        "LS60Wireless": "KEF LS60 Wireless (Wi-Fi, Bluetooth, TV, Optical, Coaxial, Analog)",
         "XIO": "KEF XIO (Wi-Fi, Bluetooth, TV, Optical)"
       }
     }

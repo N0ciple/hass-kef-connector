@@ -51,7 +51,7 @@ async def async_setup_entry(
     # Get device info to group sensors under the same device as media_player
     name = entry.data[CONF_NAME]
     host = entry.data[CONF_HOST]
-    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSX2").upper()
+    speaker_model = entry.data.get(CONF_SPEAKER_MODEL, "LSXII").upper()
     mac_address = format_mac(await coordinator.speaker.mac_address)
     device_unique_id = f"{UNIQUE_ID_PREFIX}_{mac_address}"
 

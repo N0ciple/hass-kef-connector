@@ -25,7 +25,7 @@ class KefCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         name: str,
         scan_interval: int,
         offline_retry_interval: int,
-        speaker_model: str = "LSX2",
+        speaker_model: str = "LSXII",
     ) -> None:
         """Initialize the coordinator."""
         self.speaker = speaker
