@@ -58,6 +58,12 @@ SOURCES = {
     "default": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog", "usb"],
 }
 
+MODEL_ALIASES = {
+    "LSXII": "LSX2",
+    "LSXIILT": "LSX2LT",
+    "LS50WII": "LS50W2",
+}
+
 UNIQUE_ID_PREFIX = "KEF_SPEAKER"
 
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
@@ -151,6 +157,7 @@ async def async_setup_platform(
 
     # make sure the speaker model is in uppercase
     speaker_model = speaker_model.upper()
+    speaker_model = MODEL_ALIASES.get(speaker_model, speaker_model)
 
     # get session
     session = hass_aiohttp.async_create_clientsession(hass)
@@ -158,7 +165,7 @@ async def async_setup_platform(
     if speaker_model not in SOURCES:
         sources = SOURCES["default"]
         _LOGGER.warning(
-            "Kef Speaker model %s is unknown. Using default sources. Please make sure the model is either LSX2, LSX2LT, LS50W2 or LS60",
+            "Kef Speaker model %s is unknown. Using default sources. Please make sure the model is either LSX2, LSXII, LSX2LT, LSXIILT, LS50W2, LS50WII, LS60 or XIO",
             speaker_model,
         )
     else:
