@@ -127,3 +127,16 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Local Home Assistant dev instance (scripts/develop): only track the config file
+config/*
+!config/configuration.yaml
+.dev-snapshots/
+
+# Test / lint environment and artefacts
+.venv-test/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+dist/
