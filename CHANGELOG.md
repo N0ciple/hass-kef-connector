@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.0](https://github.com/N0ciple/hass-kef-connector/compare/0.6.5...1.0.0) (2026-11-08)
+
+First stable release of the 1.0 rewrite, identical to 1.0.0-beta.1: see its notes below for the breaking changes and new features.
+
 ## [1.0.0-beta.1](https://github.com/N0ciple/hass-kef-connector/compare/0.6.5...1.0.0-beta.1) (2026-11-07)
 
 ### ⚠ BREAKING CHANGES

@@ -6,9 +6,8 @@
       "package-name": "kef_connector",
       "include-component-in-tag": false,
       "include-v-in-tag": false,
-      "prerelease": true,
-      "prerelease-type": "beta",
-      "release-as": "1.0.0-beta.1",
+      "prerelease": false,
+      "release-as": "1.0.0",
       "extra-files": [
         {
           "type": "json",
