@@ -3,6 +3,8 @@ name: Tests
 on:
   push:
   pull_request:
+  schedule:
+    - cron: "0 4 * * 1"  # weekly, catches new Home Assistant releases
   workflow_dispatch:
 
 permissions: {}
@@ -12,10 +14,10 @@ jobs:
     name: Lint and type-check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           python-version: "3.14"
           enable-cache: true
@@ -28,17 +30,35 @@ jobs:
     name: Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@v10
         with:
           python-version: "3.14"
           enable-cache: true
       - run: uv sync --locked --group test
       - run: uv run --no-sync pytest --cov-report=xml
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: coverage.xml
           if-no-files-found: ignore
+
+  tests-latest-ha:
+    # Early warning: the suite against the newest Home Assistant release (the
+    # locked test group pins the minimum supported version). Informative only.
+    name: Tests (latest Home Assistant)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v10
+        with:
+          python-version: "3.14"
+      - run: uv sync --locked --group test
+      - run: uv pip install --upgrade pytest-homeassistant-custom-component
+      - run: uv run --no-sync python -c "import homeassistant.const as c; print('Home Assistant', c.__version__)"
+      - run: uv run --no-sync pytest -p no:cacheprovider
