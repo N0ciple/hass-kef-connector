@@ -31,7 +31,7 @@ Commits follow Conventional Commits. [release-please](https://github.com/googlea
 
 The zip asset is required for HACS/Marketplace download counts (`zip_release` in `hacs.json`).
 
-Betas: `release-please-config.json` has `prerelease: true`, `prerelease-type: beta` and `release-as: 1.0.0-beta.1`. After the first beta, remove `release-as`; further betas then bump `beta.N`. For the stable release set `prerelease` to false and use `release-as` (e.g. `1.0.0`) once. Update `CHANGELOG.md` before merging the release PR, and after the release is created replace its generated body with curated notes (breaking changes and required actions first): HACS/Marketplace users see the release body in the update dialog.
+Versions: `release-please-config.json` has `release-as: 1.0.0` for the first stable release; remove it after that release so that versions follow the commits (`fix` → patch, `feat` → minor, `feat!` → major). For a beta, set `prerelease: true`, `prerelease-type: beta` and `release-as` (e.g. `1.1.0-beta.1`), then remove `release-as` for the next betas. Update `CHANGELOG.md` before merging the release PR, and after the release is created replace its generated body with curated notes (breaking changes and required actions first): HACS/Marketplace users see the release body in the update dialog.
 
 The release-please workflow needs "Allow GitHub Actions to create and approve pull requests" enabled in the repository settings. Checks on the release PR do not run when it is opened with `GITHUB_TOKEN`; close and reopen it, or use a PAT, if you need them.
 
