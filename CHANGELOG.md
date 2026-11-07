@@ -14,7 +14,6 @@ First stable release of the 1.0 rewrite, identical to 1.0.0-beta.1: see its note
 * A media player entity renamed by hand is now shown with the device name in front of the custom name; check its name after upgrading.
 * Requires Home Assistant 2026.10.0 or newer.
 * Requires pykefcontrol 1.0 (installed automatically).
-* No clean downgrade: going back to 0.x leaves a config entry that fails to load and must be deleted by hand. Back up Home Assistant before upgrading.
 
 ### Features
 

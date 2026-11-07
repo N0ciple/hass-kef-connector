@@ -320,10 +320,6 @@ All measured on a real LS50 Wireless II.
 
 ## ⬆️ Upgrading from 0.x
 
-**Make a backup before upgrading.** Going back to 0.x is not clean: the old version takes the entity back
-from the YAML block, and the new config entry fails to load until you delete it by hand. Restoring the
-backup is the simple way back.
-
 - Your `media_player: - platform: kef_connector` block is imported automatically at the first start. The
   entity is kept, so automations and dashboards keep working, and the options are converted to percent.
 - Home Assistant then shows a repair asking you to remove the YAML block: delete it from

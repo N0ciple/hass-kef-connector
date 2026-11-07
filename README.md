@@ -29,8 +29,6 @@ YAML configuration is no longer the way to set up the integration, but your exis
 
 Things that change: the speaker now appears as a device with additional entities, and the volume options are now in percent. See the [changelog](CHANGELOG.md). If you had renamed the media player entity yourself, Home Assistant now shows the device name in front of your custom name: check the name after upgrading and adjust it if needed.
 
-**Make a backup before upgrading.** Going back to 0.x afterwards is not clean: the old version takes the entity back from the YAML block, and the new config entry fails to load until you delete it by hand. Restoring the backup is the simple way back.
-
 ## Troubleshooting
 
 Download the diagnostics from the speaker's device page and see the [troubleshooting section](docs/documentation.md#️-troubleshooting) of the documentation. Report problems in the [issue tracker](https://github.com/N0ciple/hass-kef-connector/issues).
