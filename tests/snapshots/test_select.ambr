@@ -1,0 +1,456 @@
+# serializer version: 1
+# name: test_entities[select.gramophone_auto_standby-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'standby_20mins',
+        'standby_30mins',
+        'standby_60mins',
+        'standby_none',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_auto_standby',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Auto standby',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Auto standby',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'standby_delay',
+    'unique_id': '84:17:15:00:00:01_standby_delay',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_auto_standby-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Auto standby',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'standby_20mins',
+        'standby_30mins',
+        'standby_60mins',
+        'standby_none',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_auto_standby',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'standby_30mins',
+  })
+# ---
+# name: test_entities[select.gramophone_bass_extension-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'standard',
+        'extra',
+        'less',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_bass_extension',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Bass extension',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Bass extension',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'bass_extension',
+    'unique_id': '84:17:15:00:00:01_bass_extension',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_bass_extension-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Bass extension',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'standard',
+        'extra',
+        'less',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_bass_extension',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'less',
+  })
+# ---
+# name: test_entities[select.gramophone_favourite_button-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'next_source',
+        'set_cable_mode',
+        'enable_bluetooth_pairing',
+        'set_subwoofer_out',
+        'set_volume',
+        'set_disable_top_panel',
+        'set_maximum_volume',
+        'set_master_channel_mode',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_favourite_button',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Favourite button',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Favourite button',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'favourite_button',
+    'unique_id': '84:17:15:00:00:01_favourite_button',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_favourite_button-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Favourite button',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'next_source',
+        'set_cable_mode',
+        'enable_bluetooth_pairing',
+        'set_subwoofer_out',
+        'set_volume',
+        'set_disable_top_panel',
+        'set_maximum_volume',
+        'set_master_channel_mode',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_favourite_button',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'next_source',
+  })
+# ---
+# name: test_entities[select.gramophone_primary_speaker-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'left',
+        'right',
+        'leftright',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_primary_speaker',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Primary speaker',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Primary speaker',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'master_channel',
+    'unique_id': '84:17:15:00:00:01_master_channel',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_primary_speaker-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Primary speaker',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'left',
+        'right',
+        'leftright',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_primary_speaker',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'left',
+  })
+# ---
+# name: test_entities[select.gramophone_speaker_connection-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'wired',
+        'wireless',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_speaker_connection',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Speaker connection',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Speaker connection',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'cable_mode',
+    'unique_id': '84:17:15:00:00:01_cable_mode',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_speaker_connection-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Speaker connection',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'wired',
+        'wireless',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_speaker_connection',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'wireless',
+  })
+# ---
+# name: test_entities[select.gramophone_subwoofer_preset-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'custom',
+        'other',
+        'kc62',
+        'kf92',
+        'kube8b',
+        'kube10b',
+        'kube12b',
+        'kube15mie',
+        't2',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_subwoofer_preset',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Subwoofer preset',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Subwoofer preset',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'subwoofer_preset',
+    'unique_id': '84:17:15:00:00:01_subwoofer_preset',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_subwoofer_preset-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Subwoofer preset',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'custom',
+        'other',
+        'kc62',
+        'kf92',
+        'kube8b',
+        'kube10b',
+        'kube12b',
+        'kube15mie',
+        't2',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_subwoofer_preset',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'kc62',
+  })
+# ---
+# name: test_entities[select.gramophone_wake_up_source-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'wakeup_default',
+        'bluetooth',
+        'tv',
+        'optical',
+        'coaxial',
+        'analog',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'select',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'select.gramophone_wake_up_source',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Wake-up source',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Wake-up source',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'wake_up_source',
+    'unique_id': '84:17:15:00:00:01_wake_up_source',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[select.gramophone_wake_up_source-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Wake-up source',
+      <SelectEntityCapabilityAttribute.OPTIONS: 'options'>: list([
+        'wakeup_default',
+        'bluetooth',
+        'tv',
+        'optical',
+        'coaxial',
+        'analog',
+      ]),
+    }),
+    'context': <ANY>,
+    'entity_id': 'select.gramophone_wake_up_source',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'optical',
+  })
+# ---

@@ -1,0 +1,541 @@
+# serializer version: 1
+# name: test_entities[number.gramophone_balance-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 30,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -30,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_balance',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Balance',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Balance',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'balance',
+    'unique_id': '84:17:15:00:00:01_balance',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[number.gramophone_balance-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Balance',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 30,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -30,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_balance',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '0.0',
+  })
+# ---
+# name: test_entities[number.gramophone_desk_mode_attenuation-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 0,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -10,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 0.5,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_desk_mode_attenuation',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Desk mode attenuation',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Desk mode attenuation',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'desk_mode_attenuation',
+    'unique_id': '84:17:15:00:00:01_desk_mode_attenuation',
+    'unit_of_measurement': 'dB',
+  })
+# ---
+# name: test_entities[number.gramophone_desk_mode_attenuation-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Desk mode attenuation',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 0,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -10,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 0.5,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: 'dB',
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_desk_mode_attenuation',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '-3.0',
+  })
+# ---
+# name: test_entities[number.gramophone_high_pass_frequency-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 120,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 50,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 2.5,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_high_pass_frequency',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'High-pass frequency',
+    'options': dict({
+    }),
+    'original_device_class': <NumberDeviceClass.FREQUENCY: 'frequency'>,
+    'original_icon': None,
+    'original_name': 'High-pass frequency',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'high_pass_frequency',
+    'unique_id': '84:17:15:00:00:01_high_pass_frequency',
+    'unit_of_measurement': <UnitOfFrequency.HERTZ: 'Hz'>,
+  })
+# ---
+# name: test_entities[number.gramophone_high_pass_frequency-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'frequency',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone High-pass frequency',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 120,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 50,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 2.5,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfFrequency.HERTZ: 'Hz'>,
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_high_pass_frequency',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '70.0',
+  })
+# ---
+# name: test_entities[number.gramophone_speaker_maximum_volume-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 100,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 0,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_speaker_maximum_volume',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Speaker maximum volume',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Speaker maximum volume',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'maximum_volume',
+    'unique_id': '84:17:15:00:00:01_maximum_volume',
+    'unit_of_measurement': '%',
+  })
+# ---
+# name: test_entities[number.gramophone_speaker_maximum_volume-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Speaker maximum volume',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 100,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 0,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: '%',
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_speaker_maximum_volume',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '70.0',
+  })
+# ---
+# name: test_entities[number.gramophone_speaker_volume_step-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 10,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 1,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_speaker_volume_step',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Speaker volume step',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Speaker volume step',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'volume_step',
+    'unique_id': '84:17:15:00:00:01_volume_step',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[number.gramophone_speaker_volume_step-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Speaker volume step',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 10,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 1,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.BOX: 'box'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_speaker_volume_step',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '3.0',
+  })
+# ---
+# name: test_entities[number.gramophone_subwoofer_gain-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 10,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -10,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_subwoofer_gain',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Subwoofer gain',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Subwoofer gain',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'subwoofer_gain',
+    'unique_id': '84:17:15:00:00:01_subwoofer_gain',
+    'unit_of_measurement': 'dB',
+  })
+# ---
+# name: test_entities[number.gramophone_subwoofer_gain-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Subwoofer gain',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 10,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -10,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 1,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: 'dB',
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_subwoofer_gain',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '0.0',
+  })
+# ---
+# name: test_entities[number.gramophone_subwoofer_low_pass_frequency-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 250,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 40,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 2.5,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_subwoofer_low_pass_frequency',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Subwoofer low-pass frequency',
+    'options': dict({
+    }),
+    'original_device_class': <NumberDeviceClass.FREQUENCY: 'frequency'>,
+    'original_icon': None,
+    'original_name': 'Subwoofer low-pass frequency',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'subwoofer_low_pass_frequency',
+    'unique_id': '84:17:15:00:00:01_subwoofer_low_pass_frequency',
+    'unit_of_measurement': <UnitOfFrequency.HERTZ: 'Hz'>,
+  })
+# ---
+# name: test_entities[number.gramophone_subwoofer_low_pass_frequency-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'frequency',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Subwoofer low-pass frequency',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 250,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: 40,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 2.5,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: <UnitOfFrequency.HERTZ: 'Hz'>,
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_subwoofer_low_pass_frequency',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '45.0',
+  })
+# ---
+# name: test_entities[number.gramophone_treble-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 3,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -3,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 0.25,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_treble',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Treble',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Treble',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'treble',
+    'unique_id': '84:17:15:00:00:01_treble',
+    'unit_of_measurement': 'dB',
+  })
+# ---
+# name: test_entities[number.gramophone_treble-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Treble',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 3,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -3,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 0.25,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: 'dB',
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_treble',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '1.0',
+  })
+# ---
+# name: test_entities[number.gramophone_wall_mode_attenuation-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 0,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -10,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 0.5,
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'number',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'number.gramophone_wall_mode_attenuation',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Wall mode attenuation',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Wall mode attenuation',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'wall_mode_attenuation',
+    'unique_id': '84:17:15:00:00:01_wall_mode_attenuation',
+    'unit_of_measurement': 'dB',
+  })
+# ---
+# name: test_entities[number.gramophone_wall_mode_attenuation-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Wall mode attenuation',
+      <NumberEntityCapabilityAttribute.MAX: 'max'>: 0,
+      <NumberEntityCapabilityAttribute.MIN: 'min'>: -10,
+      <NumberEntityCapabilityAttribute.MODE: 'mode'>: <NumberMode.SLIDER: 'slider'>,
+      <NumberEntityCapabilityAttribute.STEP: 'step'>: 0.5,
+      <EntityStateAttribute.UNIT_OF_MEASUREMENT: 'unit_of_measurement'>: 'dB',
+    }),
+    'context': <ANY>,
+    'entity_id': 'number.gramophone_wall_mode_attenuation',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': '-2.5',
+  })
+# ---

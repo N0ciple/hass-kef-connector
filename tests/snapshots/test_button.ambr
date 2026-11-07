@@ -1,0 +1,202 @@
+# serializer version: 1
+# name: test_entities[button.gramophone_bluetooth_pairing-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.gramophone_bluetooth_pairing',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Bluetooth pairing',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Bluetooth pairing',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'bluetooth_pairing',
+    'unique_id': '84:17:15:00:00:01_bluetooth_pairing',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[button.gramophone_bluetooth_pairing-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Bluetooth pairing',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.gramophone_bluetooth_pairing',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_entities[button.gramophone_disconnect_bluetooth-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': None,
+    'entity_id': 'button.gramophone_disconnect_bluetooth',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Disconnect Bluetooth',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Disconnect Bluetooth',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'bluetooth_disconnect',
+    'unique_id': '84:17:15:00:00:01_bluetooth_disconnect',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[button.gramophone_disconnect_bluetooth-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Disconnect Bluetooth',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.gramophone_disconnect_bluetooth',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_entities[button.gramophone_reset_dsp_settings-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'button.gramophone_reset_dsp_settings',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Reset DSP settings',
+    'options': dict({
+    }),
+    'original_device_class': None,
+    'original_icon': None,
+    'original_name': 'Reset DSP settings',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': 'reset_dsp',
+    'unique_id': '84:17:15:00:00:01_reset_dsp',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[button.gramophone_reset_dsp_settings-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Reset DSP settings',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.gramophone_reset_dsp_settings',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
+# name: test_entities[button.gramophone_restart-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': None,
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'button',
+    'entity_category': <EntityCategory.CONFIG: 'config'>,
+    'entity_id': 'button.gramophone_restart',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': 'Restart',
+    'options': dict({
+    }),
+    'original_device_class': <ButtonDeviceClass.RESTART: 'restart'>,
+    'original_icon': None,
+    'original_name': 'Restart',
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': 0,
+    'translation_key': None,
+    'unique_id': '84:17:15:00:00:01_restart',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[button.gramophone_restart-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'restart',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone Restart',
+    }),
+    'context': <ANY>,
+    'entity_id': 'button.gramophone_restart',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'unknown',
+  })
+# ---
