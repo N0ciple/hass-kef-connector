@@ -8,7 +8,7 @@ rules:
     comment: Push updates from the speaker event queue, no polling.
   brands: done
   common-modules: done
-  config-flow-test-coverage: todo
+  config-flow-test-coverage: done
   config-flow: done
   dependency-transparency: done
   docs-actions:
@@ -45,7 +45,7 @@ rules:
   reauthentication-flow:
     status: exempt
     comment: The speaker API has no user authentication.
-  test-coverage: todo
+  test-coverage: done
 
   # Gold
   devices: done

@@ -10,7 +10,7 @@
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/N0ciple/hass-kef-connector/issues",
   "loggers": ["pykefcontrol"],
-  "quality_scale": "gold",
+  "quality_scale": "platinum",
   "requirements": ["pykefcontrol==1.0.0"],
   "version": "1.0.0-beta.1",
   "zeroconf": ["_kef-info._tcp.local."]
