@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Create the local development venv (.venv) with uv and install Home Assistant
+# plus the dev tools. Re-run after bumping HA_VERSION.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+# Latest stable Home Assistant and the Python it requires (>=3.14.2).
+HA_VERSION="2026.11.0"
+PYTHON_VERSION="3.14"
+
+# (Re)create the venv; --seed adds pip so HA can fall back to it if needed.
+uv venv --python "${PYTHON_VERSION}" --seed --allow-existing .venv
+
+# Home Assistant itself, pinned, plus dev tools.
+# Note: pytest-homeassistant-custom-component lags HA releases; add it here
+# only once its homeassistant pin matches HA_VERSION.
+uv pip install --python .venv \
+    "homeassistant==${HA_VERSION}" \
+    colorlog \
+    ruff
+
+# default_config needs assist_pipeline, whose requirements (pymicro-vad,
+# pyspeex-noise) ship no wheels for this Python and must be compiled.
+# HA would try (and fail) at every start without a C++ compiler, so build
+# them here; on NixOS borrow gcc from nixpkgs when none is on PATH.
+manifest=".venv/lib/python${PYTHON_VERSION}/site-packages/homeassistant/components/assist_pipeline/manifest.json"
+mapfile -t reqs < <(.venv/bin/python -c 'import json, sys; print("\n".join(json.load(open(sys.argv[1]))["requirements"]))' "${manifest}")
+if command -v c++ >/dev/null || ! command -v nix-shell >/dev/null; then
+    uv pip install --python .venv "${reqs[@]}"
+else
+    nix-shell -p gcc --run "uv pip install --python .venv ${reqs[*]}"
+fi

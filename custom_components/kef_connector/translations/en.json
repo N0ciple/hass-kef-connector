@@ -1,0 +1,293 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "This speaker is already configured.",
+      "already_in_progress": "The setup of this speaker is already in progress.",
+      "cannot_connect": "Failed to connect to the speaker.",
+      "not_kef": "This device does not look like a KEF wireless speaker.",
+      "reconfigure_successful": "The speaker was reconfigured successfully.",
+      "unique_id_mismatch": "This address belongs to another speaker. Enter the address of the speaker configured in this entry.",
+      "unknown": "Unexpected error."
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the speaker. Check that it is powered and connected to the network, and that the address is correct.",
+      "not_kef": "This device does not look like a KEF wireless speaker (LS50 Wireless II, LS60 Wireless, LSX II, LSX II LT, XIO, LS LUXE).",
+      "unknown": "Unexpected error."
+    },
+    "flow_title": "{name}",
+    "step": {
+      "discovery_confirm": {
+        "description": "Do you want to set up {name} ({model}, {host})?",
+        "title": "KEF speaker found"
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "IP address of the speaker. Reserve this address in your router so that it does not change."
+        },
+        "description": "Change the address of the speaker.",
+        "title": "Reconfigure the KEF speaker"
+      },
+      "user": {
+        "data": {
+          "host": "Host"
+        },
+        "data_description": {
+          "host": "IP address of the speaker, shown in the KEF Connect app (speaker settings). Reserve this address in your router so that it does not change."
+        },
+        "description": "Set up a KEF wireless speaker.",
+        "title": "KEF speaker"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "bluetooth_connected": {
+        "name": "Bluetooth connection"
+      }
+    },
+    "button": {
+      "bluetooth_disconnect": {
+        "name": "Disconnect Bluetooth"
+      },
+      "bluetooth_pairing": {
+        "name": "Bluetooth pairing"
+      },
+      "reset_dsp": {
+        "name": "Reset DSP settings"
+      }
+    },
+    "number": {
+      "balance": {
+        "name": "Balance"
+      },
+      "desk_mode_attenuation": {
+        "name": "Desk mode attenuation"
+      },
+      "high_pass_frequency": {
+        "name": "High-pass frequency"
+      },
+      "maximum_volume": {
+        "name": "Speaker maximum volume"
+      },
+      "subwoofer_gain": {
+        "name": "Subwoofer gain"
+      },
+      "subwoofer_low_pass_frequency": {
+        "name": "Subwoofer low-pass frequency"
+      },
+      "treble": {
+        "name": "Treble"
+      },
+      "volume_step": {
+        "name": "Speaker volume step"
+      },
+      "wall_mode_attenuation": {
+        "name": "Wall mode attenuation"
+      }
+    },
+    "select": {
+      "bass_extension": {
+        "name": "Bass extension",
+        "state": {
+          "extra": "Extra",
+          "less": "Less",
+          "standard": "Standard"
+        }
+      },
+      "cable_mode": {
+        "name": "Speaker connection",
+        "state": {
+          "wired": "Wired",
+          "wireless": "Wireless"
+        }
+      },
+      "favourite_button": {
+        "name": "Favourite button",
+        "state": {
+          "enable_bluetooth_pairing": "Bluetooth pairing",
+          "next_source": "Next source",
+          "set_cable_mode": "Speaker connection",
+          "set_dialogue_mode": "Dialogue mode",
+          "set_disable_top_panel": "Top panel lock",
+          "set_master_channel_mode": "Primary speaker",
+          "set_maximum_volume": "Maximum volume",
+          "set_subwoofer_out": "Subwoofer output",
+          "set_usb_source": "USB source",
+          "set_volume": "Fixed volume"
+        }
+      },
+      "master_channel": {
+        "name": "Primary speaker",
+        "state": {
+          "left": "Left",
+          "leftright": "Left and right",
+          "right": "Right"
+        }
+      },
+      "sound_profile": {
+        "name": "Sound profile",
+        "state": {
+          "default": "Default",
+          "dialogue": "Dialogue",
+          "direct": "Direct",
+          "movie": "Movie",
+          "music": "Music",
+          "night": "Night"
+        }
+      },
+      "standby_delay": {
+        "name": "Auto standby",
+        "state": {
+          "standby_20mins": "After 20 minutes",
+          "standby_30mins": "After 30 minutes",
+          "standby_60mins": "After 60 minutes",
+          "standby_none": "Never"
+        }
+      },
+      "subwoofer_preset": {
+        "name": "Subwoofer preset",
+        "state": {
+          "custom": "Custom",
+          "kc62": "KC62",
+          "kf92": "KF92",
+          "kube10b": "Kube 10b",
+          "kube12b": "Kube 12b",
+          "kube15mie": "Kube 15 MIE",
+          "kube8b": "Kube 8b",
+          "other": "Other",
+          "t2": "T2"
+        }
+      },
+      "wake_up_source": {
+        "name": "Wake-up source",
+        "state": {
+          "analog": "Analog",
+          "bluetooth": "Bluetooth",
+          "coaxial": "Coaxial",
+          "optical": "Optical",
+          "tv": "TV",
+          "usb": "USB",
+          "wakeup_default": "Default"
+        }
+      }
+    },
+    "switch": {
+      "auto_switch_tv": {
+        "name": "Auto switch to TV"
+      },
+      "desk_mode": {
+        "name": "Desk mode"
+      },
+      "dialogue_mode": {
+        "name": "Dialogue mode"
+      },
+      "front_led": {
+        "name": "Front LED"
+      },
+      "front_standby_led": {
+        "name": "Front standby LED"
+      },
+      "high_pass_filter": {
+        "name": "High-pass filter"
+      },
+      "phase_correction": {
+        "name": "Phase correction"
+      },
+      "startup_tone": {
+        "name": "Startup tone"
+      },
+      "subwoofer_always_on": {
+        "name": "Subwoofer always on"
+      },
+      "subwoofer_output": {
+        "name": "Subwoofer output"
+      },
+      "top_panel_led": {
+        "name": "Top panel LED"
+      },
+      "top_panel_lock": {
+        "name": "Top panel lock"
+      },
+      "top_panel_standby_led": {
+        "name": "Top panel standby LED"
+      },
+      "usb_charging": {
+        "name": "USB charging"
+      },
+      "volume_limit": {
+        "name": "Volume limit"
+      },
+      "wall_mode": {
+        "name": "Wall mode"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Failed to connect to the KEF speaker at {host}."
+    },
+    "command_failed": {
+      "message": "The speaker refused the command: {error}"
+    },
+    "communication_error": {
+      "message": "Failed to communicate with the speaker: {error}"
+    },
+    "invalid_source": {
+      "message": "Unknown source: {source}."
+    },
+    "invalid_value": {
+      "message": "Invalid value: {error}"
+    },
+    "setup_failed": {
+      "message": "Failed to set up the KEF speaker at {host}: {error}"
+    },
+    "speaker_unavailable": {
+      "message": "The speaker at {host} is unreachable."
+    },
+    "unsupported_media_type": {
+      "message": "Unsupported media type: {media_type}. Play an audio URL or a media source item."
+    },
+    "update_failed": {
+      "message": "Failed to read the state of the speaker: {error}"
+    },
+    "wrong_device": {
+      "message": "Another device answers at {host}. Waiting for the speaker to be discovered at its new address."
+    }
+  },
+  "issues": {
+    "deprecated_yaml": {
+      "description": "The YAML configuration of the KEF speaker {name} ({host}) has been imported into the UI, with its options. The media player keeps its entity ID and settings.\n\nRemove this speaker from the `media_player:` section of your configuration (configuration.yaml or a package), then restart Home Assistant to fix this issue:\n\n```yaml\nmedia_player:\n  - platform: kef_connector\n    host: {host}\n    ...\n```\n\nThe YAML options (maximum_volume, volume_step) are now the \"Volume cap in Home Assistant\" and \"Volume step in Home Assistant\" options, set in Settings > Devices & services > KEF Connector > Configure. YAML support will be removed in kef_connector 1.6 (mid-2027).",
+      "title": "The KEF Connector YAML configuration is deprecated"
+    },
+    "deprecated_yaml_import_issue_cannot_connect": {
+      "description": "The YAML configuration of the KEF speaker {name} could not be imported into the UI: the speaker at {host} could not be reached.\n\nCheck that the speaker is powered and that its address is correct, then restart Home Assistant to retry. You can also add the speaker in Settings > Devices & services and remove the `- platform: kef_connector` entry from your configuration. YAML support will be removed in kef_connector 1.6 (mid-2027).",
+      "title": "The KEF Connector YAML configuration could not be imported"
+    },
+    "deprecated_yaml_import_issue_not_kef": {
+      "description": "The YAML configuration of the KEF speaker {name} could not be imported into the UI: the device at {host} does not look like a KEF wireless speaker.\n\nFix the address and restart Home Assistant to retry, or add the speaker in Settings > Devices & services and remove the `- platform: kef_connector` entry from your configuration. YAML support will be removed in kef_connector 1.6 (mid-2027).",
+      "title": "The KEF Connector YAML configuration could not be imported"
+    },
+    "deprecated_yaml_import_issue_unknown": {
+      "description": "The YAML configuration of the KEF speaker {name} ({host}) could not be imported into the UI because of an unexpected error (see the logs).\n\nAdd the speaker in Settings > Devices & services and remove the `- platform: kef_connector` entry from your configuration. YAML support will be removed in kef_connector 1.6 (mid-2027).",
+      "title": "The KEF Connector YAML configuration could not be imported"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "max_volume": "Volume cap in Home Assistant",
+          "volume_step": "Volume step in Home Assistant"
+        },
+        "data_description": {
+          "max_volume": "Home Assistant never sets the volume above this level; the remote and the app can still go higher. The speaker maximum volume, a setting of the speaker itself, limits every control.",
+          "volume_step": "Volume change of the volume up and down actions of Home Assistant. The speaker volume step, a setting of the speaker itself, applies to its remote and buttons."
+        },
+        "title": "KEF speaker options"
+      }
+    }
+  }
+}

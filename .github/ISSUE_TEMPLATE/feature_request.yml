@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest an improvement
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What do you want to do?
+      description: Describe the use case rather than the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behaviour
+      description: How should it work? If it needs a new speaker API call, say so if you know it.
+  - type: input
+    id: model
+    attributes:
+      label: Speaker model
+      placeholder: LS50 Wireless II

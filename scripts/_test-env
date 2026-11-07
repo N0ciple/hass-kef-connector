@@ -1,0 +1,20 @@
+# Sourced by scripts/test and scripts/lint: create/refresh .venv-test from uv.lock.
+# Never touches .venv (reserved for the dev Home Assistant instance).
+#
+# pykefcontrol comes from PyPI (version pinned in pyproject.toml and uv.lock).
+# KEF_PYKEFCONTROL_LOCAL=1 installs the sibling checkout ../pykefcontrol
+# (editable) over it, to test unreleased library changes; the next run without
+# the variable puts the locked PyPI release back.
+export UV_PROJECT_ENVIRONMENT="${PWD}/.venv-test"
+unset VIRTUAL_ENV
+
+uv sync --locked --group test --quiet
+
+if [[ "${KEF_PYKEFCONTROL_LOCAL:-}" == 1 ]]; then
+    if [[ ! -d ../pykefcontrol ]]; then
+        echo "KEF_PYKEFCONTROL_LOCAL=1 but ../pykefcontrol does not exist" >&2
+        exit 1
+    fi
+    echo "Using local ../pykefcontrol (editable)"
+    uv pip install --python .venv-test --no-deps --quiet -e ../pykefcontrol
+fi

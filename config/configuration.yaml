@@ -1,0 +1,23 @@
+# Minimal Home Assistant config for local development (see scripts/develop).
+
+# Frontend, onboarding, config UI and the usual core integrations.
+# https://www.home-assistant.io/integrations/default_config/
+default_config:
+
+# https://www.home-assistant.io/integrations/homeassistant/
+homeassistant:
+  debug: true
+  # Local, untracked test setups (e.g. a legacy YAML speaker): config/packages/*.yaml
+  packages: !include_dir_named packages
+
+# Port defaults to 8123; override with e.g. `HASS_PORT=8124 scripts/develop`.
+# https://www.home-assistant.io/integrations/http/
+http:
+  server_port: !env_var HASS_PORT 8123
+
+# https://www.home-assistant.io/integrations/logger/
+logger:
+  default: info
+  logs:
+    custom_components.kef_connector: debug
+    pykefcontrol: debug

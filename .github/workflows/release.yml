@@ -1,0 +1,51 @@
+name: Release assets
+
+# Builds kef_connector.zip and attaches it to a release. HACS and the Home
+# Assistant Marketplace only count downloads for zip_release assets.
+#
+# Triggered by releases published by hand. Releases created by release-please
+# use GITHUB_TOKEN and therefore do NOT trigger `release: published`; the
+# release-please workflow calls this workflow directly instead.
+
+on:
+  release:
+    types: [published]
+  workflow_call:
+    inputs:
+      tag:
+        description: Release tag to build and upload to
+        required: true
+        type: string
+
+permissions: {}
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # upload the asset to the release
+    env:
+      TAG: ${{ inputs.tag || github.event.release.tag_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ inputs.tag || github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Check the tag matches the manifest version
+        run: |
+          version="$(jq -r .version custom_components/kef_connector/manifest.json)"
+          if [[ "${TAG}" != "${version}" ]]; then
+            echo "::error::Tag '${TAG}' does not match manifest version '${version}'"
+            exit 1
+          fi
+
+      - name: Build the zip (integration files at the archive root)
+        run: |
+          mkdir -p dist
+          cd custom_components/kef_connector
+          zip -r -9 "${GITHUB_WORKSPACE}/dist/kef_connector.zip" . -x '*/__pycache__/*' '__pycache__/*' '*.pyc'
+
+      - name: Upload to the release
+        run: gh release upload "${TAG}" dist/kef_connector.zip --clobber --repo "${GITHUB_REPOSITORY}"

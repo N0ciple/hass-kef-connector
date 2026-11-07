@@ -1,0 +1,293 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "Cette enceinte est déjà configurée.",
+      "already_in_progress": "La configuration de cette enceinte est déjà en cours.",
+      "cannot_connect": "Impossible de se connecter à l'enceinte.",
+      "not_kef": "Cet appareil ne semble pas être une enceinte sans fil KEF.",
+      "reconfigure_successful": "L'enceinte a été reconfigurée.",
+      "unique_id_mismatch": "Cette adresse correspond à une autre enceinte. Saisissez l'adresse de l'enceinte configurée dans cette entrée.",
+      "unknown": "Erreur inattendue."
+    },
+    "error": {
+      "cannot_connect": "Impossible de se connecter à l'enceinte. Vérifiez qu'elle est alimentée et connectée au réseau, et que l'adresse est correcte.",
+      "not_kef": "Cet appareil ne semble pas être une enceinte sans fil KEF (LS50 Wireless II, LS60 Wireless, LSX II, LSX II LT, XIO, LS LUXE).",
+      "unknown": "Erreur inattendue."
+    },
+    "flow_title": "{name}",
+    "step": {
+      "discovery_confirm": {
+        "description": "Voulez-vous configurer {name} ({model}, {host}) ?",
+        "title": "Enceinte KEF trouvée"
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Hôte"
+        },
+        "data_description": {
+          "host": "Adresse IP de l'enceinte. Réservez cette adresse dans votre box pour qu'elle ne change pas."
+        },
+        "description": "Modifier l'adresse de l'enceinte.",
+        "title": "Reconfigurer l'enceinte KEF"
+      },
+      "user": {
+        "data": {
+          "host": "Hôte"
+        },
+        "data_description": {
+          "host": "Adresse IP de l'enceinte, visible dans l'application KEF Connect (réglages de l'enceinte). Réservez cette adresse dans votre box pour qu'elle ne change pas."
+        },
+        "description": "Configurer une enceinte sans fil KEF.",
+        "title": "Enceinte KEF"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "bluetooth_connected": {
+        "name": "Connexion Bluetooth"
+      }
+    },
+    "button": {
+      "bluetooth_disconnect": {
+        "name": "Déconnecter le Bluetooth"
+      },
+      "bluetooth_pairing": {
+        "name": "Appairage Bluetooth"
+      },
+      "reset_dsp": {
+        "name": "Réinitialiser les réglages DSP"
+      }
+    },
+    "number": {
+      "balance": {
+        "name": "Balance"
+      },
+      "desk_mode_attenuation": {
+        "name": "Atténuation du mode bureau"
+      },
+      "high_pass_frequency": {
+        "name": "Fréquence passe-haut"
+      },
+      "maximum_volume": {
+        "name": "Volume maximum de l'enceinte"
+      },
+      "subwoofer_gain": {
+        "name": "Gain du caisson de basses"
+      },
+      "subwoofer_low_pass_frequency": {
+        "name": "Fréquence passe-bas du caisson de basses"
+      },
+      "treble": {
+        "name": "Aigus"
+      },
+      "volume_step": {
+        "name": "Pas de volume de l'enceinte"
+      },
+      "wall_mode_attenuation": {
+        "name": "Atténuation du mode mural"
+      }
+    },
+    "select": {
+      "bass_extension": {
+        "name": "Extension des basses",
+        "state": {
+          "extra": "Extra",
+          "less": "Réduite",
+          "standard": "Standard"
+        }
+      },
+      "cable_mode": {
+        "name": "Liaison entre les enceintes",
+        "state": {
+          "wired": "Filaire",
+          "wireless": "Sans fil"
+        }
+      },
+      "favourite_button": {
+        "name": "Bouton favori",
+        "state": {
+          "enable_bluetooth_pairing": "Appairage Bluetooth",
+          "next_source": "Source suivante",
+          "set_cable_mode": "Liaison entre les enceintes",
+          "set_dialogue_mode": "Mode dialogue",
+          "set_disable_top_panel": "Verrouillage du panneau supérieur",
+          "set_master_channel_mode": "Enceinte principale",
+          "set_maximum_volume": "Volume maximum",
+          "set_subwoofer_out": "Sortie caisson de basses",
+          "set_usb_source": "Source USB",
+          "set_volume": "Volume fixe"
+        }
+      },
+      "master_channel": {
+        "name": "Enceinte principale",
+        "state": {
+          "left": "Gauche",
+          "leftright": "Gauche et droite",
+          "right": "Droite"
+        }
+      },
+      "sound_profile": {
+        "name": "Profil sonore",
+        "state": {
+          "default": "Par défaut",
+          "dialogue": "Dialogues",
+          "direct": "Direct",
+          "movie": "Film",
+          "music": "Musique",
+          "night": "Nuit"
+        }
+      },
+      "standby_delay": {
+        "name": "Mise en veille automatique",
+        "state": {
+          "standby_20mins": "Après 20 minutes",
+          "standby_30mins": "Après 30 minutes",
+          "standby_60mins": "Après 60 minutes",
+          "standby_none": "Jamais"
+        }
+      },
+      "subwoofer_preset": {
+        "name": "Préréglage du caisson de basses",
+        "state": {
+          "custom": "Personnalisé",
+          "kc62": "KC62",
+          "kf92": "KF92",
+          "kube10b": "Kube 10b",
+          "kube12b": "Kube 12b",
+          "kube15mie": "Kube 15 MIE",
+          "kube8b": "Kube 8b",
+          "other": "Autre",
+          "t2": "T2"
+        }
+      },
+      "wake_up_source": {
+        "name": "Source de réveil",
+        "state": {
+          "analog": "Analogique",
+          "bluetooth": "Bluetooth",
+          "coaxial": "Coaxiale",
+          "optical": "Optique",
+          "tv": "TV",
+          "usb": "USB",
+          "wakeup_default": "Par défaut"
+        }
+      }
+    },
+    "switch": {
+      "auto_switch_tv": {
+        "name": "Basculement automatique sur la TV"
+      },
+      "desk_mode": {
+        "name": "Mode bureau"
+      },
+      "dialogue_mode": {
+        "name": "Mode dialogue"
+      },
+      "front_led": {
+        "name": "LED avant"
+      },
+      "front_standby_led": {
+        "name": "LED de veille avant"
+      },
+      "high_pass_filter": {
+        "name": "Filtre passe-haut"
+      },
+      "phase_correction": {
+        "name": "Correction de phase"
+      },
+      "startup_tone": {
+        "name": "Son de démarrage"
+      },
+      "subwoofer_always_on": {
+        "name": "Caisson de basses toujours allumé"
+      },
+      "subwoofer_output": {
+        "name": "Sortie caisson de basses"
+      },
+      "top_panel_led": {
+        "name": "LED du panneau supérieur"
+      },
+      "top_panel_lock": {
+        "name": "Verrouillage du panneau supérieur"
+      },
+      "top_panel_standby_led": {
+        "name": "LED de veille du panneau supérieur"
+      },
+      "usb_charging": {
+        "name": "Charge USB"
+      },
+      "volume_limit": {
+        "name": "Limite de volume"
+      },
+      "wall_mode": {
+        "name": "Mode mural"
+      }
+    }
+  },
+  "exceptions": {
+    "cannot_connect": {
+      "message": "Impossible de se connecter à l'enceinte KEF à l'adresse {host}."
+    },
+    "command_failed": {
+      "message": "L'enceinte a refusé la commande : {error}"
+    },
+    "communication_error": {
+      "message": "Erreur de communication avec l'enceinte : {error}"
+    },
+    "invalid_source": {
+      "message": "Source inconnue : {source}."
+    },
+    "invalid_value": {
+      "message": "Valeur invalide : {error}"
+    },
+    "setup_failed": {
+      "message": "Impossible de configurer l'enceinte KEF à l'adresse {host} : {error}"
+    },
+    "speaker_unavailable": {
+      "message": "L'enceinte à l'adresse {host} est injoignable."
+    },
+    "unsupported_media_type": {
+      "message": "Type de média non pris en charge : {media_type}. Lisez une URL audio ou un élément d'une source multimédia."
+    },
+    "update_failed": {
+      "message": "Impossible de lire l'état de l'enceinte : {error}"
+    },
+    "wrong_device": {
+      "message": "Un autre appareil répond à l'adresse {host}. En attente de la découverte de l'enceinte à sa nouvelle adresse."
+    }
+  },
+  "issues": {
+    "deprecated_yaml": {
+      "description": "La configuration YAML de l'enceinte KEF {name} ({host}) a été importée dans l'interface, avec ses options. Le lecteur multimédia conserve son identifiant d'entité et ses réglages.\n\nSupprimez cette enceinte de la section `media_player:` de votre configuration (configuration.yaml ou un package), puis redémarrez Home Assistant pour corriger ce problème :\n\n```yaml\nmedia_player:\n  - platform: kef_connector\n    host: {host}\n    ...\n```\n\nLes options YAML (maximum_volume, volume_step) sont désormais les options « Plafond de volume dans Home Assistant » et « Pas de volume dans Home Assistant », réglées dans Paramètres > Appareils et services > KEF Connector > Configurer. La prise en charge du YAML sera supprimée dans kef_connector 1.6 (mi-2027).",
+      "title": "La configuration YAML de KEF Connector est obsolète"
+    },
+    "deprecated_yaml_import_issue_cannot_connect": {
+      "description": "La configuration YAML de l'enceinte KEF {name} n'a pas pu être importée dans l'interface : l'enceinte à l'adresse {host} est injoignable.\n\nVérifiez que l'enceinte est alimentée et que son adresse est correcte, puis redémarrez Home Assistant pour réessayer. Vous pouvez aussi ajouter l'enceinte dans Paramètres > Appareils et services et supprimer l'entrée `- platform: kef_connector` de votre configuration. La prise en charge du YAML sera supprimée dans kef_connector 1.6 (mi-2027).",
+      "title": "La configuration YAML de KEF Connector n'a pas pu être importée"
+    },
+    "deprecated_yaml_import_issue_not_kef": {
+      "description": "La configuration YAML de l'enceinte KEF {name} n'a pas pu être importée dans l'interface : l'appareil à l'adresse {host} ne semble pas être une enceinte sans fil KEF.\n\nCorrigez l'adresse et redémarrez Home Assistant pour réessayer, ou ajoutez l'enceinte dans Paramètres > Appareils et services et supprimez l'entrée `- platform: kef_connector` de votre configuration. La prise en charge du YAML sera supprimée dans kef_connector 1.6 (mi-2027).",
+      "title": "La configuration YAML de KEF Connector n'a pas pu être importée"
+    },
+    "deprecated_yaml_import_issue_unknown": {
+      "description": "La configuration YAML de l'enceinte KEF {name} ({host}) n'a pas pu être importée dans l'interface à cause d'une erreur inattendue (voir le journal).\n\nAjoutez l'enceinte dans Paramètres > Appareils et services et supprimez l'entrée `- platform: kef_connector` de votre configuration. La prise en charge du YAML sera supprimée dans kef_connector 1.6 (mi-2027).",
+      "title": "La configuration YAML de KEF Connector n'a pas pu être importée"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": {
+          "max_volume": "Plafond de volume dans Home Assistant",
+          "volume_step": "Pas de volume dans Home Assistant"
+        },
+        "data_description": {
+          "max_volume": "Home Assistant ne règle jamais le volume au-dessus de ce niveau ; la télécommande et l'application peuvent toujours aller plus haut. Le volume maximum de l'enceinte, un réglage de l'enceinte elle-même, limite toutes les commandes.",
+          "volume_step": "Variation du volume des actions monter et baisser le volume de Home Assistant. Le pas de volume de l'enceinte, un réglage de l'enceinte elle-même, s'applique à sa télécommande et à ses boutons."
+        },
+        "title": "Options de l'enceinte KEF"
+      }
+    }
+  }
+}

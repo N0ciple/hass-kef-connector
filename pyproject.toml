@@ -1,0 +1,95 @@
+# Development tooling only: this repository is a Home Assistant custom
+# integration, not an installable Python package. The integration's runtime
+# requirements live in custom_components/kef_connector/manifest.json.
+[project]
+name = "hass-kef-connector-dev"
+version = "0.0.0"
+description = "Dev tooling for the kef_connector Home Assistant integration (not a package)"
+requires-python = ">=3.14.2"
+dependencies = []
+
+[dependency-groups]
+test = [
+    "pytest-homeassistant-custom-component==0.13.375",
+    "pykefcontrol==1.0.0",
+    "mypy",
+    "ruff",
+]
+
+[tool.uv]
+package = false
+default-groups = []
+
+[tool.ruff]
+target-version = "py314"
+line-length = 88
+
+[tool.ruff.lint]
+select = [
+    "A",     # builtins shadowing
+    "ASYNC", # async pitfalls
+    "B",     # bugbear
+    "C4",    # comprehensions
+    "E",
+    "F",
+    "FURB",
+    "I",     # isort
+    "ICN",
+    "LOG",
+    "N",     # pep8-naming
+    "PERF",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",    # pytest style
+    "RET",
+    "RSE",
+    "RUF",
+    "SIM",
+    "SLF",
+    "T20",   # no print
+    "TC",    # typing-only imports
+    "UP",    # pyupgrade
+    "W",
+]
+ignore = [
+    "PLR0911", # too many returns
+    "PLR0912", # too many branches
+    "PLR0913", # too many arguments
+    "PLR0915", # too many statements
+    "PLR2004", # magic values
+    "RUF012",  # mutable class attributes (HA entity descriptions)
+]
+
+[tool.ruff.lint.per-file-ignores]
+# Test functions take many fixtures (positional arguments by design).
+"tests/**" = ["SLF001", "PLR2004", "S101", "PLR0917"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["custom_components", "pykefcontrol"]
+combine-as-imports = true
+
+[tool.mypy]
+python_version = "3.14"
+files = ["custom_components"]
+strict = true
+warn_unreachable = true
+show_error_codes = true
+plugins = []
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "--cov=custom_components.kef_connector --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["custom_components/kef_connector"]
+branch = true
+omit = ["custom_components/kef_connector/brand/*"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_also = [
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":semanticCommits"],
+  "enabledManagers": ["homeassistant-manifest", "pep621", "github-actions"],
+  "schedule": ["before 6am on monday"],
+  "timezone": "Europe/Paris",
+  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "description": "pytest-homeassistant-custom-component pins homeassistant and its test deps: update them as one",
+      "matchManagers": ["pep621"],
+      "matchDepNames": ["pytest-homeassistant-custom-component", "homeassistant"],
+      "groupName": "Home Assistant test stack"
+    },
+    {
+      "description": "Dev tooling in one PR",
+      "matchManagers": ["pep621"],
+      "matchDepNames": ["ruff", "mypy"],
+      "groupName": "lint tooling"
+    },
+    {
+      "description": "Runtime requirement of the integration: its own PR, typed as a fix",
+      "matchManagers": ["homeassistant-manifest"],
+      "semanticCommitType": "fix",
+      "semanticCommitScope": "deps"
+    },
+    {
+      "matchManagers": ["pep621", "github-actions"],
+      "semanticCommitType": "chore",
+      "semanticCommitScope": "deps"
+    }
+  ]
+}

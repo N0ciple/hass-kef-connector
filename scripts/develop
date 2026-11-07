@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Run a local Home Assistant instance (http://localhost:8123) that loads the
+# integration from ./custom_components. Run scripts/setup first.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+# Use the venv created by scripts/setup.
+source .venv/bin/activate
+
+# Create the config dir if needed (configuration.yaml is tracked in git).
+mkdir -p config/packages
+
+# Make HA find our integration: HA scans <config>/custom_components, so
+# link it to the repo's custom_components (relative, so the repo can move).
+if [[ ! -e config/custom_components ]]; then
+    ln -s ../custom_components config/custom_components
+fi
+
+# Start Home Assistant in the foreground; Ctrl+C (SIGINT/SIGTERM) stops it cleanly.
+exec hass --config "${PWD}/config" --debug "$@"

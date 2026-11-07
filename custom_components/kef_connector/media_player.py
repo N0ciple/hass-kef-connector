@@ -1,454 +1,497 @@
+"""Media player of a KEF speaker."""
+
 from __future__ import annotations
 
-import asyncio
-from datetime import timedelta
-import functools
 import logging
+from typing import TYPE_CHECKING, Any, override
 
-from pykefcontrol.kef_connector import KefAsyncConnector
 import voluptuous as vol
-
+from homeassistant.components import media_source
 from homeassistant.components.media_player import (
-    PLATFORM_SCHEMA,
+    PLATFORM_SCHEMA as MEDIA_PLAYER_PLATFORM_SCHEMA,
     MediaPlayerEntity,
+)
+from homeassistant.components.media_player.browse_media import (
+    BrowseMedia,
+    async_process_play_media_url,
+)
+from homeassistant.components.media_player.const import (
+    ATTR_MEDIA_EXTRA,
+    MediaPlayerDeviceClass,
     MediaPlayerEntityFeature,
+    MediaPlayerState,
+    MediaType,
+    RepeatMode,
 )
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_NAME,
-    STATE_IDLE,
-    STATE_OFF,
-    STATE_ON,
-    STATE_PAUSED,
-    STATE_PLAYING,
-)
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import entity_registry as er
-import homeassistant.helpers.aiohttp_client as hass_aiohttp
-import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.device_registry import format_mac
+from homeassistant.config_entries import SOURCE_IMPORT
+from homeassistant.const import CONF_HOST, CONF_NAME
+from homeassistant.data_entry_flow import FlowResultType
+from homeassistant.exceptions import ServiceValidationError
+from homeassistant.helpers import config_validation as cv, issue_registry as ir
+from homeassistant.util import slugify
 
-# from homeassistant.helpers.entity_component import EntityComponent
-# from homeassistant.helpers.entity_platform import AddEntitiesCallback
-# from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
-import homeassistant.util.dt as dt_util
+from pykefcontrol import PlaybackState, PlayMode, Source, Track
+
+from .const import (
+    CONF_MAX_VOLUME,
+    CONF_VOLUME_STEP,
+    DEFAULT_MAX_VOLUME,
+    DEFAULT_VOLUME_STEP,
+    DOMAIN,
+    LEGACY_CONF_MAX_VOLUME,
+    LEGACY_CONF_SPEAKER_MODEL,
+    LEGACY_CONF_VOLUME_STEP,
+    LEGACY_DEFAULT_MAX_VOLUME,
+    LEGACY_DEFAULT_NAME,
+    LEGACY_DEFAULT_SPEAKER_MODEL,
+    LEGACY_DEFAULT_VOLUME_STEP,
+    MEDIA_PLAYER_UNIQUE_ID_PREFIX,
+)
+from .coordinator import kef_errors
+from .entity import KefEntity, kef_command
+
+if TYPE_CHECKING:
+    from datetime import datetime
+
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.entity_platform import (
+        AddConfigEntryEntitiesCallback,
+        AddEntitiesCallback,
+    )
+    from homeassistant.helpers.typing import ConfigType, DiscoveryInfoType
+
+    from .coordinator import KefConfigEntry, KefCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
-CONF_MAX_VOLUME = "maximum_volume"
-CONF_VOLUME_STEP = "volume_step"
-CONF_SPEAKER_MODEL = "speaker_model"
+PARALLEL_UPDATES = 1
 
-DEFAULT_NAME = "DEFAULT_KEFSPEAKER"
-DEFAULT_MAX_VOLUME = 1
-DEFAULT_VOLUME_STEP = 0.03
-DEFAULT_SPEAKER_MODEL = "default"
-
-SCAN_INTERVAL = timedelta(seconds=10)
-
-
-DOMAIN = "kef_connector"
-
-SOURCES = {
-    "LSX2": ["wifi", "bluetooth", "tv", "optical", "analog", "usb"],
-    "LSX2LT": ["wifi", "bluetooth", "tv", "optical", "usb"],
-    "LS50W2": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
-    "LS60": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog"],
-    "XIO": ["wifi", "bluetooth", "tv", "optical"],
-    "default": ["wifi", "bluetooth", "tv", "optical", "coaxial", "analog", "usb"],
-}
-
-UNIQUE_ID_PREFIX = "KEF_SPEAKER"
-
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+# Legacy 0.x YAML platform: only imported into a config entry.
+PLATFORM_SCHEMA = MEDIA_PLAYER_PLATFORM_SCHEMA.extend(
     {
         vol.Required(CONF_HOST): cv.string,
-        vol.Optional(CONF_NAME, default=DEFAULT_NAME): cv.string,
-        vol.Optional(CONF_MAX_VOLUME, default=DEFAULT_MAX_VOLUME): cv.small_float,
-        vol.Optional(CONF_VOLUME_STEP, default=DEFAULT_VOLUME_STEP): cv.small_float,
-        vol.Optional(CONF_SPEAKER_MODEL, default=DEFAULT_SPEAKER_MODEL): cv.string,
+        vol.Optional(CONF_NAME, default=LEGACY_DEFAULT_NAME): cv.string,
+        vol.Optional(
+            LEGACY_CONF_MAX_VOLUME, default=LEGACY_DEFAULT_MAX_VOLUME
+        ): cv.small_float,
+        vol.Optional(
+            LEGACY_CONF_VOLUME_STEP, default=LEGACY_DEFAULT_VOLUME_STEP
+        ): cv.small_float,
+        vol.Optional(
+            LEGACY_CONF_SPEAKER_MODEL, default=LEGACY_DEFAULT_SPEAKER_MODEL
+        ): cv.string,
     }
 )
+IMPORT_FAILURE_REASONS = ("cannot_connect", "not_kef", "unknown")
 
-
-def migrate_old_unique_ids(hass: HomeAssistant):
-    """Migrate old unique ids to new format."""
-    registry = er.async_get(hass)
-    for entity in registry.entities.values():
-        if entity.platform == DOMAIN:
-            entity_mac_address = entity.unique_id.split("_")[-1]
-            if entity.unique_id == "KEFLS50W2_" + entity_mac_address:
-                _LOGGER.warning(
-                    "Kef Connector found an entity with an old unique_id: %s. It will automatically migrate it to the new unique_id scheme. The entity is : %s",
-                    entity.unique_id,
-                    entity,
-                )
-                registry.async_update_entity(
-                    entity.entity_id,
-                    new_unique_id=f"{UNIQUE_ID_PREFIX}_{format_mac(entity_mac_address)}",
-                )
-
-
-# Create new class from KefAsyncConnector to override the
-# resurect_session method, so that i uses the function
-# async_get_clientsession
-class KefHassAsyncConnector(KefAsyncConnector):
-    """KefAsyncConnector with resurect_session method."""
-
-    def __init__(
-        self,
-        host,
-        session=None,
-        hass: HomeAssistant | None = None,
-        model=None,
-    ) -> None:
-        """Initialize the KefAsyncConnector."""
-
-        super().__init__(host, session=session, model=model)
-        self.hass = hass
-
-    async def resurect_session(self):
-        """Resurect the session if it is closed."""
-        if self._session is None:
-            self._session = hass_aiohttp.async_get_clientsession(self.hass)
-
-
-# Decorator to delay the update of home assistant UI
-# since the speaker does not update imediately is internal state
-def delay_update(delay):
-    """Delay the update of home assistant UI."""
-
-    def inner_function(function):
-        @functools.wraps(function)
-        async def wrapper(self, *args, **kwargs):
-            # Execute the function
-            output = await function(self, *args, **kwargs)
-            # Sleep the set delay
-            await asyncio.sleep(delay)
-            # Trigger an update
-            self.async_schedule_update_ha_state(True)
-            return output
-
-        return wrapper
-
-    return inner_function
+BASE_FEATURES = (
+    MediaPlayerEntityFeature.TURN_ON
+    | MediaPlayerEntityFeature.TURN_OFF
+    | MediaPlayerEntityFeature.VOLUME_SET
+    | MediaPlayerEntityFeature.VOLUME_STEP
+    | MediaPlayerEntityFeature.VOLUME_MUTE
+    | MediaPlayerEntityFeature.SELECT_SOURCE
+    | MediaPlayerEntityFeature.PLAY_MEDIA
+    | MediaPlayerEntityFeature.BROWSE_MEDIA
+)
+# When the player does not tell which controls are allowed.
+DEFAULT_TRANSPORT_FEATURES = (
+    MediaPlayerEntityFeature.PLAY
+    | MediaPlayerEntityFeature.PAUSE
+    | MediaPlayerEntityFeature.STOP
+    | MediaPlayerEntityFeature.NEXT_TRACK
+    | MediaPlayerEntityFeature.PREVIOUS_TRACK
+)
+# Sources played by the speaker's own player (others are physical inputs).
+PLAYER_SOURCES = {Source.WIFI, Source.BLUETOOTH}
+PLAYBACK_STATES = {
+    PlaybackState.PLAYING: MediaPlayerState.PLAYING,
+    PlaybackState.PAUSED: MediaPlayerState.PAUSED,
+    PlaybackState.TRANSITIONING: MediaPlayerState.BUFFERING,
+}
+PLAYABLE_MEDIA_TYPES = {MediaType.MUSIC, MediaType.URL}
 
 
 async def async_setup_platform(
-    hass: HomeAssistant | None,
-    config,
-    async_add_entities,
-    discovery_info=None,
-):
-    """Set up platform kef_connector."""
+    hass: HomeAssistant,
+    config: ConfigType,
+    async_add_entities: AddEntitiesCallback,
+    discovery_info: DiscoveryInfoType | None = None,
+) -> None:
+    """Import the 0.x YAML configuration into a config entry.
 
-    # Get variables from configuration
-    host = config[CONF_HOST]
-    name = config[CONF_NAME]
-    max_volume = config[CONF_MAX_VOLUME]
-    volume_step = config[CONF_VOLUME_STEP]
-    speaker_model = config[CONF_SPEAKER_MODEL]
-
-    # make sure the speaker model is in uppercase
-    speaker_model = speaker_model.upper()
-
-    # get session
-    session = hass_aiohttp.async_create_clientsession(hass)
-
-    if speaker_model not in SOURCES:
-        sources = SOURCES["default"]
+    No entity is added here: the media player belongs to the config entry.
+    """
+    host: str = config[CONF_HOST]
+    suffix = slugify(host)
+    result = await hass.config_entries.flow.async_init(
+        DOMAIN, context={"source": SOURCE_IMPORT}, data=dict(config)
+    )
+    reason = result.get("reason")
+    placeholders = {"host": host, "name": config[CONF_NAME]}
+    if result["type"] is FlowResultType.ABORT and reason != "already_configured":
+        if reason not in IMPORT_FAILURE_REASONS:
+            reason = "unknown"
         _LOGGER.warning(
-            "Kef Speaker model %s is unknown. Using default sources. Please make sure the model is either LSX2, LSX2LT, LS50W2 or LS60",
-            speaker_model,
+            "Could not import the YAML configuration of the KEF speaker at %s: %s",
+            host,
+            reason,
         )
-    else:
-        sources = SOURCES[speaker_model]
-
-    # Pass model to the connector if explicitly configured
-    if speaker_model == "default":
-        speaker_model = None
-        _LOGGER.warning(
-            "No speaker_model configured. The model will be auto-detected via an API call. "
-            "Please set speaker_model in your configuration as this will become mandatory in a future version."
+        ir.async_delete_issue(hass, DOMAIN, f"deprecated_yaml_{suffix}")
+        ir.async_create_issue(
+            hass,
+            DOMAIN,
+            f"deprecated_yaml_import_issue_{reason}_{suffix}",
+            is_fixable=False,
+            issue_domain=DOMAIN,
+            severity=ir.IssueSeverity.WARNING,
+            translation_key=f"deprecated_yaml_import_issue_{reason}",
+            translation_placeholders=placeholders,
         )
-
-    _LOGGER.debug(
-        "Setting up %s with host: %s, name: %s, sources: %s",
+        return
+    _LOGGER.warning(
+        "The YAML configuration of the KEF speaker at %s has been imported into "
+        "a config entry: remove it from configuration.yaml",
+        host,
+    )
+    for failure in IMPORT_FAILURE_REASONS:
+        ir.async_delete_issue(
+            hass, DOMAIN, f"deprecated_yaml_import_issue_{failure}_{suffix}"
+        )
+    ir.async_create_issue(
+        hass,
         DOMAIN,
-        host,
-        name,
-        sources,
+        f"deprecated_yaml_{suffix}",
+        is_fixable=False,
+        issue_domain=DOMAIN,
+        severity=ir.IssueSeverity.WARNING,
+        translation_key="deprecated_yaml",
+        translation_placeholders=placeholders,
     )
 
-    # Migrate old unique ids starting with "KEFLS50W2_" to the new format "KEF_SPEAKER_" + mac_address
-    migrate_old_unique_ids(hass)
 
-    media_player = KefSpeaker(
-        host, name, max_volume, volume_step, sources, session, hass, speaker_model
-    )
-
-    async_add_entities([media_player], update_before_add=True)
-
-    return True
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: KefConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
+) -> None:
+    """Set up the media player of a speaker."""
+    async_add_entities([KefMediaPlayer(entry.runtime_data)])
 
 
-class KefSpeaker(MediaPlayerEntity):
-    """Media player implementation for KEF Speakers."""
+class KefMediaPlayer(KefEntity, MediaPlayerEntity):
+    """The speaker as a media player."""
 
-    def __init__(
-        self,
-        host,
-        name,
-        max_volume,
-        volume_step,
-        sources,
-        session,
-        hass: HomeAssistant | None,
-        model=None,
-    ) -> None:
+    _attr_name = None
+    _attr_device_class = MediaPlayerDeviceClass.SPEAKER
+    _attr_translation_key = "speaker"
+    _attr_media_content_type = MediaType.MUSIC
+    _attr_media_image_remotely_accessible = False
+
+    def __init__(self, coordinator: KefCoordinator) -> None:
         """Initialize the media player."""
-        super().__init__()
-        self._speaker = KefHassAsyncConnector(host, session=session, hass=hass, model=model)
-        if name != DEFAULT_NAME:
-            self._name = name
-        else:
-            self._name = None
-        self._max_volume = max_volume
-        self._volume_step = volume_step * 100
-        self._sources = sources
-        # Default previous source to wifi at component creation
-        self._previous_source = "wifi"
-
-        # Variables to update in async_update
-        self._volume = None
-        self._state = None
-        self._muted = None
-        self._source = None
-        self._attr_media_artist = None
-        self._attr_media_album_name = None
-        self._attr_media_title = None
-        self._attr_media_position = None
-        self._attr_media_duration = None
-        self._attr_media_position_updated_at = None
-        self._attr_unique_id = None
-        self._attr_media_image_url = None
-        self._attr_media_image_remotely_accessible = False
+        super().__init__(coordinator)
+        # Unchanged since 0.x, so that the YAML entity is adopted.
+        self._attr_unique_id = f"{MEDIA_PLAYER_UNIQUE_ID_PREFIX}_{self.mac}"
+        self._attr_source_list = [str(s) for s in coordinator.capabilities.sources]
+        options = coordinator.config_entry.options
+        self._max_volume: int = options.get(CONF_MAX_VOLUME, DEFAULT_MAX_VOLUME)
+        self._step: int = options.get(CONF_VOLUME_STEP, DEFAULT_VOLUME_STEP)
+        self._attr_volume_step = self._step / 100
 
     @property
-    def should_poll(self):
-        """Push an update after each command."""
-        return True
+    def _on_player(self) -> bool:
+        """Whether the speaker is on and plays from its own player."""
+        data = self.coordinator.data
+        return data.is_on and data.source in PLAYER_SOURCES
 
     @property
-    def name(self):
-        """Return the name of the device."""
-        return self._name
+    def _track(self) -> Track | None:
+        return self.coordinator.data.track if self.coordinator.data.is_on else None
 
     @property
-    def state(self):
-        """Return the state of the device."""
-        return self._state
+    @override
+    def state(self) -> MediaPlayerState:
+        """State of the speaker (off in standby: it can be woken up)."""
+        data = self.coordinator.data
+        if not data.is_on:
+            return MediaPlayerState.OFF
+        if not self._on_player:
+            return MediaPlayerState.ON
+        if data.playback_state is None:
+            return MediaPlayerState.IDLE
+        return PLAYBACK_STATES.get(data.playback_state, MediaPlayerState.IDLE)
 
     @property
-    def volume_level(self):
-        """Volume level of the media player (0..1)."""
-        return self._volume
+    @override
+    def supported_features(self) -> MediaPlayerEntityFeature:
+        """Features, depending on what the current source allows."""
+        features = BASE_FEATURES
+        if not self._on_player:
+            return features
+        player = self.coordinator.data.player
+        if player is None or "controls" not in player.raw:
+            return features | DEFAULT_TRANSPORT_FEATURES
+        controls = player.controls
+        features |= MediaPlayerEntityFeature.STOP
+        if controls.pause:
+            features |= MediaPlayerEntityFeature.PLAY | MediaPlayerEntityFeature.PAUSE
+        if controls.next:
+            features |= MediaPlayerEntityFeature.NEXT_TRACK
+        if controls.previous:
+            features |= MediaPlayerEntityFeature.PREVIOUS_TRACK
+        if controls.seek:
+            features |= MediaPlayerEntityFeature.SEEK
+        if any(mode.shuffle for mode in controls.play_modes):
+            features |= MediaPlayerEntityFeature.SHUFFLE_SET
+        if any(mode.repeat != "off" for mode in controls.play_modes):
+            features |= MediaPlayerEntityFeature.REPEAT_SET
+        return features
 
     @property
-    def is_volume_muted(self):
-        """Boolean if volume is currently muted."""
-        return self._muted
+    @override
+    def source(self) -> str | None:
+        """Current input."""
+        source = self.coordinator.data.source
+        return None if source in (None, Source.STANDBY) else str(source)
 
     @property
-    def source(self):
-        """Name of the current input source."""
-        return self._source
+    @override
+    def volume_level(self) -> float | None:
+        """Volume (0..1 of the speaker's range)."""
+        volume = self.coordinator.data.volume
+        return None if volume is None else volume / 100
 
     @property
-    def source_list(self):
-        """List of available input sources."""
-        return self._sources
+    @override
+    def is_volume_muted(self) -> bool | None:
+        """Mute state."""
+        return self.coordinator.data.muted
 
     @property
-    def icon(self):
-        """Return the device's icon."""
-        return "mdi:speaker-wireless"
+    @override
+    def shuffle(self) -> bool | None:
+        """Shuffle state."""
+        mode = self.coordinator.data.play_mode
+        return None if mode is None else mode.shuffle
 
     @property
-    def unique_id(self):
-        """Return the device unique id."""
-        return self._attr_unique_id
+    @override
+    def repeat(self) -> RepeatMode | None:
+        """Repeat mode."""
+        mode = self.coordinator.data.play_mode
+        return None if mode is None else RepeatMode(mode.repeat)
 
     @property
+    @override
+    def media_title(self) -> str | None:
+        """Title of the current track."""
+        return self._track.title if self._track else None
+
+    @property
+    @override
+    def media_artist(self) -> str | None:
+        """Artist of the current track."""
+        return self._track.artist if self._track else None
+
+    @property
+    @override
+    def media_album_name(self) -> str | None:
+        """Album of the current track."""
+        return self._track.album if self._track else None
+
+    @property
+    @override
+    def media_album_artist(self) -> str | None:
+        """Album artist of the current track."""
+        return self._track.album_artist if self._track else None
+
+    @property
+    @override
     def media_image_url(self) -> str | None:
-        """Image url of current playing media."""
-        return self._attr_media_image_url
+        """Cover of the current track."""
+        return self._track.cover_url if self._track else None
 
     @property
-    def media_artist(self):
-        """Artist of current playing media, music track only."""
-        return self._attr_media_artist
+    @override
+    def media_duration(self) -> int | None:
+        """Duration of the current track, in seconds."""
+        if not self._on_player or not self._track or not self._track.duration_ms:
+            return None
+        return self._track.duration_ms // 1000
 
     @property
-    def media_album_name(self):
-        """Album name of current playing media, music track only."""
-        return self._attr_media_album_name
+    @override
+    def media_position(self) -> int | None:
+        """Position in the current track, in seconds."""
+        position = self.coordinator.data.position_ms
+        if not self._on_player or position is None or position < 0:
+            return None
+        return position // 1000
 
     @property
-    def media_title(self):
-        """Title of current playing media."""
-        return self._attr_media_title
+    @override
+    def media_position_updated_at(self) -> datetime | None:
+        """When the position was read."""
+        if self.media_position is None:
+            return None
+        return self.coordinator.data.position_updated_at
 
-    @property
-    def media_position(self):
-        """Position of current playing media in seconds."""
-        return self._attr_media_position
+    @kef_command
+    @override
+    async def async_turn_on(self) -> None:
+        """Wake the speaker up on its last source."""
+        await self.coordinator.client.power_on()
 
-    @property
-    def media_position_updated_at(self):
-        """When was the position of the current playing media valid.
+    @kef_command
+    @override
+    async def async_turn_off(self) -> None:
+        """Put the speaker in standby."""
+        await self.coordinator.client.power_off()
 
-        Returns value from homeassistant.util.dt.utcnow().
-        """
-
-        return self._attr_media_position_updated_at
-
-    @property
-    def supported_features(self):
-        """Flag media player features that are supported."""
-        support_kef = (
-            MediaPlayerEntityFeature.VOLUME_SET
-            | MediaPlayerEntityFeature.VOLUME_STEP
-            | MediaPlayerEntityFeature.VOLUME_MUTE
-            | MediaPlayerEntityFeature.TURN_OFF
-            | MediaPlayerEntityFeature.TURN_ON
-            | MediaPlayerEntityFeature.PREVIOUS_TRACK
-            | MediaPlayerEntityFeature.NEXT_TRACK
-            | MediaPlayerEntityFeature.PAUSE
-            | MediaPlayerEntityFeature.PLAY
-            | MediaPlayerEntityFeature.SELECT_SOURCE
+    @kef_command
+    @override
+    async def async_set_volume_level(self, volume: float) -> None:
+        """Set the volume, capped at the maximum volume option."""
+        await self.coordinator.client.set_volume(
+            round(min(volume * 100, self._max_volume))
         )
 
-        return support_kef
+    @override
+    async def async_volume_up(self) -> None:
+        """Raise the volume by the volume step, up to the maximum volume."""
+        await self._async_step_volume(self._step)
 
-    async def async_update(self):
-        """Update latest state."""
+    @override
+    async def async_volume_down(self) -> None:
+        """Lower the volume by the volume step."""
+        await self._async_step_volume(-self._step)
 
-        # Update name and unique_id if needed (the first time)
-        if self.name is None:
-            self._name = await self._speaker.speaker_name
-        if self.unique_id is None:
-            self._attr_unique_id = (
-                f"{UNIQUE_ID_PREFIX}_{format_mac(await self._speaker.mac_address)}"
+    @kef_command
+    async def _async_step_volume(self, step: int) -> None:
+        client = self.coordinator.client
+        current = self.coordinator.data.volume
+        if current is None:
+            current = await client.get_volume()
+        target = current + step
+        if step > 0:  # never raise above the cap, never lower when stepping up
+            target = max(current, min(target, self._max_volume))
+        await client.set_volume(max(0, min(100, target)))
+
+    @kef_command
+    @override
+    async def async_mute_volume(self, mute: bool) -> None:
+        """Mute or unmute."""
+        await self.coordinator.client.set_mute(mute)
+
+    @kef_command
+    @override
+    async def async_select_source(self, source: str) -> None:
+        """Select an input (wakes the speaker up)."""
+        if source not in (self.source_list or ()):
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="invalid_source",
+                translation_placeholders={"source": source},
+            )
+        await self.coordinator.client.set_source(source)
+
+    @kef_command
+    @override
+    async def async_media_play(self) -> None:
+        """Resume playback."""
+        await self.coordinator.client.play()
+
+    @kef_command
+    @override
+    async def async_media_pause(self) -> None:
+        """Pause playback."""
+        await self.coordinator.client.pause()
+
+    @kef_command
+    @override
+    async def async_media_play_pause(self) -> None:
+        """Toggle play / pause."""
+        await self.coordinator.client.play_pause()
+
+    @kef_command
+    @override
+    async def async_media_stop(self) -> None:
+        """Stop playback."""
+        await self.coordinator.client.stop()
+
+    @kef_command
+    @override
+    async def async_media_next_track(self) -> None:
+        """Next track."""
+        await self.coordinator.client.next_track()
+
+    @kef_command
+    @override
+    async def async_media_previous_track(self) -> None:
+        """Previous track."""
+        await self.coordinator.client.previous_track()
+
+    @kef_command
+    @override
+    async def async_media_seek(self, position: float) -> None:
+        """Seek to ``position`` seconds."""
+        await self.coordinator.client.seek(round(position * 1000))
+
+    @kef_command
+    @override
+    async def async_set_shuffle(self, shuffle: bool) -> None:
+        """Enable or disable shuffle."""
+        mode = self.coordinator.data.play_mode or PlayMode.NORMAL
+        await self.coordinator.client.set_play_mode(
+            PlayMode.from_flags(shuffle=shuffle, repeat=mode.repeat)
+        )
+
+    @kef_command
+    @override
+    async def async_set_repeat(self, repeat: RepeatMode) -> None:
+        """Set the repeat mode."""
+        mode = self.coordinator.data.play_mode or PlayMode.NORMAL
+        await self.coordinator.client.set_play_mode(
+            PlayMode.from_flags(shuffle=mode.shuffle, repeat=str(repeat))
+        )
+
+    @override
+    async def async_play_media(
+        self, media_type: MediaType | str, media_id: str, **kwargs: Any
+    ) -> None:
+        """Play an audio URL or media source item (experimental)."""
+        mime_type = "audio/unknown"
+        if media_source.is_media_source_id(media_id):
+            item = await media_source.async_resolve_media(
+                self.hass, media_id, self.entity_id
+            )
+            media_id, mime_type = item.url, item.mime_type
+        elif media_type not in PLAYABLE_MEDIA_TYPES and not str(media_type).startswith(
+            "audio/"
+        ):
+            raise ServiceValidationError(
+                translation_domain=DOMAIN,
+                translation_key="unsupported_media_type",
+                translation_placeholders={"media_type": str(media_type)},
+            )
+        title = (kwargs.get(ATTR_MEDIA_EXTRA) or {}).get("title")
+        with kef_errors():
+            await self.coordinator.client.play_url(
+                async_process_play_media_url(self.hass, media_id),
+                title=title,
+                mime_type=mime_type,
             )
 
-        # Get speaker volume (from [0,100] to [0,1])
-        self._volume = await self._speaker.volume / 100
-
-        # Get speaker state.
-        # Playing/Idle is available only for bluetooth or wifi
-        spkr_source = await self._speaker.source
-        if await self._speaker.status == "standby":
-            self._state = STATE_OFF
-        elif spkr_source in ["wifi", "bluetooth"]:
-            if await self._speaker.is_playing:
-                self._state = STATE_PLAYING
-            elif self._attr_media_title is not None:
-                self._state = STATE_PAUSED
-            else:
-                self._state = STATE_IDLE
-        else:
-            self._state = STATE_ON
-
-        # Check if speaker is muted
-        self._muted = True if self._volume == 0 else False
-
-        # Get currently playing media info (if any)
-        media_dict = await self._speaker.get_song_information()
-        self._attr_media_title = media_dict["title"]
-        self._attr_media_artist = media_dict["artist"]
-        self._attr_media_album_name = media_dict["album"]
-        self._attr_media_image_url = media_dict["cover_url"]
-
-        # Get speaker source
-        self._source = await self._speaker.source
-        # Store current source as previous source
-        # if source is a real physical source
-        if self._source in self._sources:
-            self._previous_source = self._source
-
-        # Update media state if a media is playing
-        if self._state == STATE_PLAYING:
-            # Update media length
-            self._attr_media_duration = int(await self._speaker.song_length / 1000)
-            # Update media position
-            self._attr_media_position = int(await self._speaker.song_status / 1000)
-            # Update last media position update
-            self._attr_media_position_updated_at = dt_util.utcnow()
-        else:
-            # Set values to None if no media is playing
-            self._attr_media_duration = None
-            self._attr_media_position = None
-            self._attr_media_position_updated_at = None
-
-    @delay_update(5)
-    async def async_turn_on(self):
-        """Turn the media player on."""
-        await self._speaker.set_source(self._previous_source)
-
-    @delay_update(5)
-    async def async_turn_off(self):
-        """Turn the media player off."""
-        await self._speaker.shutdown()
-
-    async def async_volume_up(self):
-        """Volume up the media player."""
-        await self._speaker.set_volume(await self._speaker.volume + self._volume_step)
-
-    async def async_volume_down(self):
-        """Volume down the media player."""
-        await self._speaker.set_volume(await self._speaker.volume - self._volume_step)
-
-    async def async_set_volume_level(self, volume):
-        """Set volume level, range 0..1."""
-        # make sure volume is not louder than max_volume
-        # multiply by 100 to be in range of what KefAsyncConnector expects
-        volume = int(min(volume, self._max_volume) * 100)
-        await self._speaker.set_volume(volume)
-
-    async def async_mute_volume(self, mute):
-        """Mute (true) or unmute (false) media player."""
-        if mute:
-            await self._speaker.mute()
-        else:
-            await self._speaker.unmute()
-
-    @delay_update(0.5)
-    async def async_select_source(self, source):
-        """Select input source."""
-        await self._speaker.set_source(source)
-
-    @delay_update(0.25)
-    async def async_media_play(self):
-        """Send play command."""
-        await self._speaker.toggle_play_pause()
-
-    @delay_update(0.25)
-    async def async_media_pause(self):
-        """Send pause command."""
-        await self._speaker.toggle_play_pause()
-
-    @delay_update(0.25)
-    async def async_media_play_pause(self):
-        """Toggle play pause."""
-        await self._speaker.toggle_play_pause()
-
-    @delay_update(1.5)
-    async def async_media_next_track(self):
-        """Send next track command."""
-        await self._speaker.next_track()
-
-    @delay_update(1.5)
-    async def async_media_previous_track(self):
-        """Send previous track command."""
-        await self._speaker.previous_track()
+    @override
+    async def async_browse_media(
+        self,
+        media_content_type: MediaType | str | None = None,
+        media_content_id: str | None = None,
+    ) -> BrowseMedia:
+        """Browse the audio media sources."""
+        return await media_source.async_browse_media(
+            self.hass,
+            media_content_id,
+            content_filter=lambda item: item.media_content_type.startswith("audio/"),
+        )

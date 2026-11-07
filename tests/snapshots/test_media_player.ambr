@@ -1,0 +1,84 @@
+# serializer version: 1
+# name: test_entities[media_player.gramophone-entry]
+  EntityRegistryEntrySnapshot({
+    'aliases': list([
+      None,
+    ]),
+    'area_id': None,
+    'capabilities': dict({
+      <MediaPlayerEntityCapabilityAttribute.INPUT_SOURCE_LIST: 'source_list'>: list([
+        'wifi',
+        'bluetooth',
+        'tv',
+        'optical',
+        'coaxial',
+        'analog',
+      ]),
+    }),
+    'config_entry_id': <ANY>,
+    'config_subentry_id': <ANY>,
+    'device_class': None,
+    'device_id': <ANY>,
+    'disabled_by': None,
+    'domain': 'media_player',
+    'entity_category': None,
+    'entity_id': 'media_player.gramophone',
+    'has_entity_name': True,
+    'hidden_by': None,
+    'icon': None,
+    'id': <ANY>,
+    'labels': set({
+    }),
+    'name': None,
+    'object_id_base': None,
+    'options': dict({
+    }),
+    'original_device_class': <MediaPlayerDeviceClass.SPEAKER: 'speaker'>,
+    'original_icon': None,
+    'original_name': None,
+    'platform': 'kef_connector',
+    'previous_unique_id': None,
+    'suggested_object_id': None,
+    'supported_features': <MediaPlayerEntityFeature: 450495>,
+    'translation_key': 'speaker',
+    'unique_id': 'KEF_SPEAKER_84:17:15:00:00:01',
+    'unit_of_measurement': None,
+  })
+# ---
+# name: test_entities[media_player.gramophone-state]
+  StateSnapshot({
+    'attributes': ReadOnlyDict({
+      <EntityStateAttribute.DEVICE_CLASS: 'device_class'>: 'speaker',
+      <EntityStateAttribute.ENTITY_PICTURE: 'entity_picture'>: '/api/media_player_proxy/media_player.gramophone?token=mock_token&cache=c97eb33493bc7ee3',
+      <EntityStateAttribute.FRIENDLY_NAME: 'friendly_name'>: 'Gramophone',
+      <MediaPlayerEntityStateAttribute.MEDIA_VOLUME_MUTED: 'is_volume_muted'>: False,
+      <MediaPlayerEntityStateAttribute.MEDIA_ALBUM_ARTIST: 'media_album_artist'>: 'Miles Davis',
+      <MediaPlayerEntityStateAttribute.MEDIA_ALBUM_NAME: 'media_album_name'>: 'Kind of Blue',
+      <MediaPlayerEntityStateAttribute.MEDIA_ARTIST: 'media_artist'>: 'Miles Davis',
+      <MediaPlayerEntityStateAttribute.MEDIA_CONTENT_TYPE: 'media_content_type'>: <MediaType.MUSIC: 'music'>,
+      <MediaPlayerEntityStateAttribute.MEDIA_DURATION: 'media_duration'>: 562,
+      <MediaPlayerEntityStateAttribute.MEDIA_POSITION: 'media_position'>: 61,
+      <MediaPlayerEntityStateAttribute.MEDIA_POSITION_UPDATED_AT: 'media_position_updated_at'>: datetime.datetime(2026, 11, 7, 12, 0, tzinfo=datetime.timezone.utc),
+      <MediaPlayerEntityStateAttribute.MEDIA_TITLE: 'media_title'>: 'So What',
+      <MediaPlayerEntityStateAttribute.MEDIA_REPEAT: 'repeat'>: <RepeatMode.OFF: 'off'>,
+      <MediaPlayerEntityStateAttribute.MEDIA_SHUFFLE: 'shuffle'>: False,
+      <MediaPlayerEntityStateAttribute.INPUT_SOURCE: 'source'>: 'wifi',
+      <MediaPlayerEntityCapabilityAttribute.INPUT_SOURCE_LIST: 'source_list'>: list([
+        'wifi',
+        'bluetooth',
+        'tv',
+        'optical',
+        'coaxial',
+        'analog',
+      ]),
+      <EntityStateAttribute.SUPPORTED_FEATURES: 'supported_features'>: <MediaPlayerEntityFeature: 450495>,
+      <MediaPlayerEntityStateAttribute.MEDIA_VOLUME_LEVEL: 'volume_level'>: 0.35,
+    }),
+    'context': <ANY>,
+    'entity_id': 'media_player.gramophone',
+    'last_changed': <ANY>,
+    'last_reported': <ANY>,
+    'last_updated': <ANY>,
+    'state': 'playing',
+  })
+# ---
