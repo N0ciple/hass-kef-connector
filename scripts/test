@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Run the test suite with coverage in a separate env (.venv-test).
+# Extra arguments are passed to pytest, e.g. scripts/test -k config_flow
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+source scripts/_test-env
+
+exec .venv-test/bin/python -m pytest "$@"

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# ruff (lint + format check) and mypy (strict) on the integration and tests.
+# Use --fix to let ruff fix and format the code.
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+source scripts/_test-env
+
+paths=(custom_components)
+[[ -d tests ]] && paths+=(tests)
+
+if [[ "${1:-}" == "--fix" ]]; then
+    .venv-test/bin/ruff check --fix "${paths[@]}"
+    .venv-test/bin/ruff format "${paths[@]}"
+else
+    .venv-test/bin/ruff check "${paths[@]}"
+    .venv-test/bin/ruff format --check "${paths[@]}"
+fi
+.venv-test/bin/mypy
