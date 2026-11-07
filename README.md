@@ -7,25 +7,21 @@ Home Assistant integration for KEF W2-platform wireless speakers: LS50 Wireless 
 
 ## Features
 
-- Local push: state changes appear as soon as the speaker reports them.
-- Set up from the UI; speakers are found automatically through zeroconf.
+- Local push: state changes appear as soon as the speaker reports them, no polling.
+- Set up from the UI, speakers are found automatically through zeroconf.
 - Media player with power, volume, mute, source selection, transport controls, play media and media browsing.
-- EQ/DSP settings (treble, bass extension, desk and wall modes, subwoofer...) and speaker settings (LEDs, auto standby, maximum volume...) as entities, plus restart and Bluetooth pairing buttons. Only what the speaker model supports is created; rarely used settings are disabled by default.
+- EQ/DSP and speaker settings as entities, plus restart and Bluetooth buttons. Only what your model supports is created.
 - Diagnostics download for bug reports.
 
 Requires Home Assistant 2026.10.0 or newer.
 
+## Documentation
+
+Installation, configuration, the list of entities, examples, known limitations and troubleshooting are in the [full documentation](docs/documentation.md).
+
 ## Installation
 
-With HACS or the Home Assistant Marketplace: click the badge above, or search for "KEF Connector", download it and restart Home Assistant. Pre-releases are only offered if you enable the pre-release switch.
-
-Manually: copy the `custom_components/kef_connector` folder into the `custom_components` folder of your Home Assistant configuration (or unzip `kef_connector.zip` from a release into `custom_components/kef_connector`), then restart.
-
-## Configuration
-
-Go to Settings > Devices & services. A discovered speaker is offered automatically; otherwise click "Add integration", pick KEF Connector and enter the speaker's IP address (use a static lease on your router). Use the second badge above to jump straight to it.
-
-The integration options "Volume cap in Home Assistant" and "Volume step in Home Assistant" are expressed in percent and only apply to volume changes made from Home Assistant; the speaker's own maximum volume and volume step are separate entities (Speaker maximum volume, Speaker volume step).
+With HACS or the Home Assistant Marketplace: click the first badge above, or search for "KEF Connector", download it and restart Home Assistant. Then add the speaker with the second badge, or from Settings > Devices & services (see the [documentation](docs/documentation.md#️-configuration)).
 
 ## Upgrading from 0.x
 
@@ -35,23 +31,9 @@ Things that change: the speaker now appears as a device with additional entities
 
 **Make a backup before upgrading.** Going back to 0.x afterwards is not clean: the old version takes the entity back from the YAML block, and the new config entry fails to load until you delete it by hand. Restoring the backup is the simple way back.
 
-## Playing files and media
-
-The media player can play a stream URL or a Home Assistant media source item (radio, TTS...) directly on the speaker. For full file playback (local media, DLNA/Plex/Jellyfin servers, track position), the speaker is also a DLNA renderer and a Google Cast device: use Home Assistant's built-in [DLNA Digital Media Renderer](https://www.home-assistant.io/integrations/dlna_dmr/) or [Google Cast](https://www.home-assistant.io/integrations/cast/) integration alongside this one. KEF Connector keeps handling power, source, volume and settings.
-
 ## Troubleshooting
 
-Download diagnostics from the speaker's device page (three dots menu > Download diagnostics) and attach them to any bug report. To get debug logs, add this to `configuration.yaml`, restart, reproduce the problem and download the full log from Settings > System > Logs:
-
-```yaml
-logger:
-  default: warning
-  logs:
-    custom_components.kef_connector: debug
-    pykefcontrol: debug
-```
-
-Report problems in the [issue tracker](https://github.com/N0ciple/hass-kef-connector/issues).
+Download the diagnostics from the speaker's device page and see the [troubleshooting section](docs/documentation.md#️-troubleshooting) of the documentation. Report problems in the [issue tracker](https://github.com/N0ciple/hass-kef-connector/issues).
 
 ## Development
 
