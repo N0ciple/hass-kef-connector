@@ -1,17 +1,29 @@
 {
   "domain": "kef_connector",
   "name": "KEF Connector",
-  "after_dependencies": ["media_source"],
-  "categories": ["media_entertainment.speakers_audio"],
-  "codeowners": ["@N0ciple"],
+  "after_dependencies": [
+    "media_source"
+  ],
+  "categories": [
+    "media_entertainment.speakers_audio"
+  ],
+  "codeowners": [
+    "@N0ciple"
+  ],
   "config_flow": true,
   "documentation": "https://github.com/N0ciple/hass-kef-connector",
   "integration_type": "device",
   "iot_class": "local_push",
   "issue_tracker": "https://github.com/N0ciple/hass-kef-connector/issues",
-  "loggers": ["pykefcontrol"],
+  "loggers": [
+    "pykefcontrol"
+  ],
   "quality_scale": "platinum",
-  "requirements": ["pykefcontrol==1.0.0"],
+  "requirements": [
+    "pykefcontrol==1.0.0"
+  ],
   "version": "1.0.0-beta.1",
-  "zeroconf": ["_kef-info._tcp.local."]
+  "zeroconf": [
+    "_kef-info._tcp.local."
+  ]
 }
