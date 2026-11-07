@@ -1,0 +1,19 @@
+# Git hooks, run with prek (what Home Assistant core uses) or pre-commit:
+#   uvx prek install        # once, then hooks run on every commit
+#   uvx prek run --all-files
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.4
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-json
+      - id: check-yaml
+      - id: end-of-file-fixer
+        exclude: \.ambr$
+      - id: trailing-whitespace
+        exclude: \.ambr$

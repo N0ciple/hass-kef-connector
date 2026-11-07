@@ -21,6 +21,10 @@ scripts/lint --fix      # apply ruff fixes and formatting
 
 To test unreleased library changes, run with `KEF_PYKEFCONTROL_LOCAL=1` (e.g. `KEF_PYKEFCONTROL_LOCAL=1 scripts/test`): the sibling checkout `../pykefcontrol` is then installed editable over the PyPI release. The next run without the variable puts the locked release back.
 
+CI also runs the suite against the newest Home Assistant release (latest `pytest-homeassistant-custom-component`, weekly and on every push). That job is informative: it warns early about upcoming breaking changes without blocking merges.
+
+Git hooks (ruff, ruff format, JSON/YAML checks) are configured in `.pre-commit-config.yaml` for [prek](https://github.com/j178/prek), the runner Home Assistant core uses (pre-commit works too): `uvx prek install` once, or `uvx prek run --all-files`.
+
 ## Release process
 
 Commits follow Conventional Commits. [release-please](https://github.com/googleapis/release-please) keeps a release PR open on `main` that bumps the `version` in `manifest.json`; it does not touch `CHANGELOG.md` (`skip-changelog`), which is written by hand. Merging it creates the tag (no `v` prefix, equal to the manifest version) and the GitHub release, then the same workflow builds `kef_connector.zip` and attaches it, since releases created with `GITHUB_TOKEN` cannot trigger `release.yml`. `release.yml` also runs on manually published releases and fails if the tag differs from the manifest version.
