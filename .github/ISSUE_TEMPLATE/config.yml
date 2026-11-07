@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and discussions
+    url: https://github.com/N0ciple/hass-kef-connector/discussions
+    about: Usage questions and general discussion. Use issues for bugs and feature requests only.

@@ -1,0 +1,81 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please check the [README](https://github.com/N0ciple/hass-kef-connector#troubleshooting) first.
+        Reports without a diagnostics file are hard to act on.
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+      placeholder: "2026.11.0"
+    validations:
+      required: true
+  - type: input
+    id: integration_version
+    attributes:
+      label: KEF Connector version
+      description: Settings > Devices & services > KEF Connector, or the Marketplace entry.
+      placeholder: "1.0.0-beta.1"
+    validations:
+      required: true
+  - type: input
+    id: model
+    attributes:
+      label: Speaker model and firmware
+      placeholder: "LS50 Wireless II, firmware 4.1.192"
+    validations:
+      required: true
+  - type: input
+    id: connection
+    attributes:
+      label: Connection mode
+      description: How the speaker is connected, if you know (Wi-Fi or Ethernet, wired or wireless pair, ...).
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics file
+      description: |
+        Required. Open the speaker's device page, click the three dots menu (⋮) > Download diagnostics,
+        then attach the file to this field. GitHub rejects `.json` files: rename it to `.json.txt` or zip it first.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Debug logs
+      description: |
+        Add this to `configuration.yaml`, restart, reproduce the problem, then download the full log
+        (Settings > System > Logs > Download full log) and paste the relevant part here.
+        ```yaml
+        logger:
+          default: warning
+          logs:
+            custom_components.kef_connector: debug
+            pykefcontrol: debug
+        ```
+      render: text
