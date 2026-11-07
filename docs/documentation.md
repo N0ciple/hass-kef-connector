@@ -63,6 +63,8 @@ services; click "Add" and confirm. Discovery needs mDNS to reach Home Assistant,
 same subnet/VLAN (or you need an mDNS repeater). If the speaker's IP changes later, discovery updates it
 by itself.
 
+<img src="images/discovered.png" alt="A discovered KEF speaker in Settings > Devices & services" width="70%">
+
 ### Adding a speaker by hand
 
 [![Add the integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=kef_connector)
@@ -87,6 +89,8 @@ same speaker, otherwise the change is refused.
 ### Options
 
 Settings > Devices & services > KEF Connector > Configure.
+
+<img src="images/options.png" alt="The options dialog: volume cap and volume step in Home Assistant" width="45%">
 
 | Option | Default | Description |
 | --- | --- | --- |
@@ -177,6 +181,8 @@ Ranges for EQ values come from the speaker.
 | Bluetooth connection | A Bluetooth device is connected (diagnostic) | off | speakers with Bluetooth |
 
 ## 🎵 The media player
+
+<img src="images/media-player.png" alt="Media player dialog with cover art and transport controls" width="40%">
 
 ### Features
 

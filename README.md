@@ -5,6 +5,15 @@ Home Assistant integration for KEF W2-platform wireless speakers: LS50 Wireless 
 [![Open in HACS / Marketplace](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=N0ciple&repository=hass-kef-connector&category=integration)
 [![Add the integration](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=kef_connector)
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/N0ciple/hass-kef-connector/main/docs/images/dashboard.png" alt="A Home Assistant dashboard with the KEF speaker: media player with cover art, volume, source, EQ and speaker settings" width="100%">
+</p>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/N0ciple/hass-kef-connector/main/docs/images/media-player.png" alt="Media player dialog with cover art and transport controls" width="38%">
+  &nbsp;
+  <img src="https://raw.githubusercontent.com/N0ciple/hass-kef-connector/main/docs/images/device-page.png" alt="Device page of the KEF speaker with its controls and configuration entities" width="58%">
+</p>
+
 ## Features
 
 - Local push: state changes appear as soon as the speaker reports them, no polling.
