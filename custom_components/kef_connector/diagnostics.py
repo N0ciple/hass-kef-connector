@@ -25,6 +25,12 @@ TO_REDACT = {
     "ip",
     "ip_address",
     "unique_id",
+    # Bluetooth address of the speaker (bluetooth:state) and KEF account / multiroom
+    # member ids found in the player data.
+    "address",
+    "kefId",
+    "memberId",
+    "systemMemberId",
 }
 
 

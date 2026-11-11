@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import logging
 from typing import TYPE_CHECKING, Any, override
 
@@ -28,7 +29,6 @@ from homeassistant.const import CONF_HOST, CONF_NAME
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers import config_validation as cv, issue_registry as ir
-from homeassistant.util import slugify
 
 from pykefcontrol import PlaybackState, PlayMode, Source, Track
 
@@ -112,6 +112,11 @@ PLAYBACK_STATES = {
 PLAYABLE_MEDIA_TYPES = {MediaType.MUSIC, MediaType.URL}
 
 
+def _host_hash(host: str) -> str:
+    """Short, stable id of a host for issue ids (diagnostics list issue ids)."""
+    return hashlib.sha256(host.encode()).hexdigest()[:12]
+
+
 async def async_setup_platform(
     hass: HomeAssistant,
     config: ConfigType,
@@ -123,7 +128,7 @@ async def async_setup_platform(
     No entity is added here: the media player belongs to the config entry.
     """
     host: str = config[CONF_HOST]
-    suffix = slugify(host)
+    suffix = _host_hash(host)
     result = await hass.config_entries.flow.async_init(
         DOMAIN, context={"source": SOURCE_IMPORT}, data=dict(config)
     )

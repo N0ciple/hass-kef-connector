@@ -101,6 +101,9 @@
         'title': 'Spotify',
         'type': 'container',
       }),
+      'playId': dict({
+        'systemMemberId': '**REDACTED**',
+      }),
       'state': 'playing',
       'status': dict({
         'duration': 562000,
