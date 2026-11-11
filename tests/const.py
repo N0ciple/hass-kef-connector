@@ -157,4 +157,8 @@ PLAYER_DATA = {
         },
     },
     "mediaRoles": {"title": "Spotify", "type": "container"},
+    "playId": {"systemMemberId": "0f1e2d3c-4b5a-4968-8778-a1b2c3d4e5f6"},
 }
+
+SYSTEM_MEMBER_ID = "0f1e2d3c-4b5a-4968-8778-a1b2c3d4e5f6"
+BLUETOOTH_ADDRESS = "84:17:15:00:00:02"

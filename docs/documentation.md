@@ -320,6 +320,8 @@ All measured on a real LS50 Wireless II.
   off does nothing, the speaker is still going to standby.
 - **Transport controls depend on the source.** For example there is no "previous" or shuffle/repeat on
   Deezer. The media player only shows what the source allows.
+- **Physical inputs have no track information.** On TV, optical, coaxial, analog and USB inputs the
+  speaker only reports the input name as title (for example `usb`): no artist, cover art or position.
 - **Play media is basic.** No queue, no announce/ducking, see [Play media](#play-media).
 - **Entities depend on the speaker.** They only exist when the speaker reports the setting, and some are
   disabled by default.

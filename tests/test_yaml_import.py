@@ -18,6 +18,7 @@ from custom_components.kef_connector.const import (
     CONF_VOLUME_STEP,
     DOMAIN,
 )
+from custom_components.kef_connector.media_player import _host_hash
 from pykefcontrol import KefConnectionError, KefProtocolError
 
 from .const import ENTITY_ID_2, HOST, HOST_2, NAME, NAME_2, UNIQUE_ID
@@ -25,7 +26,8 @@ from .const import ENTITY_ID_2, HOST, HOST_2, NAME, NAME_2, UNIQUE_ID
 if TYPE_CHECKING:
     from homeassistant.core import HomeAssistant
 
-ISSUE_ID = "deprecated_yaml_192_168_1_20"
+HOST_HASH = _host_hash(HOST)
+ISSUE_ID = f"deprecated_yaml_{HOST_HASH}"
 YAML_ENTITY_ID = "media_player.living_room_kef"
 YAML_SPEAKER = {
     CONF_PLATFORM: DOMAIN,
@@ -140,7 +142,7 @@ async def test_yaml_import_failure(
     assert not hass.config_entries.async_entries(DOMAIN)
     assert issue_registry.async_get_issue(DOMAIN, ISSUE_ID) is None
     issue = issue_registry.async_get_issue(
-        DOMAIN, f"deprecated_yaml_import_issue_{reason}_192_168_1_20"
+        DOMAIN, f"deprecated_yaml_import_issue_{reason}_{HOST_HASH}"
     )
     assert issue is not None
     assert issue.translation_key == f"deprecated_yaml_import_issue_{reason}"
@@ -161,7 +163,7 @@ async def test_yaml_import_unexpected_abort(
     ):
         await _setup_yaml(hass, YAML_SPEAKER)
     assert issue_registry.async_get_issue(
-        DOMAIN, "deprecated_yaml_import_issue_unknown_192_168_1_20"
+        DOMAIN, f"deprecated_yaml_import_issue_unknown_{HOST_HASH}"
     )
 
 
@@ -181,7 +183,9 @@ async def test_yaml_import_two_speakers(
     assert sorted(e.title for e in entries) == ["Living room KEF", NAME_2]
     assert all(e.state is ConfigEntryState.LOADED for e in entries)
     assert issue_registry.async_get_issue(DOMAIN, ISSUE_ID)
-    assert issue_registry.async_get_issue(DOMAIN, "deprecated_yaml_192_168_1_47")
+    assert issue_registry.async_get_issue(
+        DOMAIN, f"deprecated_yaml_{_host_hash(HOST_2)}"
+    )
     assert sorted(hass.states.async_entity_ids(MP_DOMAIN)) == [
         YAML_ENTITY_ID,
         ENTITY_ID_2,
@@ -218,7 +222,7 @@ async def test_yaml_import_failure_then_success(
     """The failure issue is replaced once the import succeeds."""
     mock_kef_client.get_device_info.side_effect = KefConnectionError("timeout")
     await _setup_yaml(hass, YAML_SPEAKER)
-    failure_id = "deprecated_yaml_import_issue_cannot_connect_192_168_1_20"
+    failure_id = f"deprecated_yaml_import_issue_cannot_connect_{HOST_HASH}"
     assert issue_registry.async_get_issue(DOMAIN, failure_id)
 
     mock_kef_client.get_device_info.side_effect = None
